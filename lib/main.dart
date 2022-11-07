@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/app_theme.dart';
-import 'package:puzzle/screens/first_register_screen.dart';
+import 'package:puzzle/screens/call_pickup_screen.dart';
 import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/screens/login_screen.dart';
 late bool isLogin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
-      home: isLogin ? const HomeScreen() : const FirstRegisterScreen(),
+      home: isLogin ? const CallPickupScreen(scaffold: HomeScreen()) : const LoginScreen(),
     );
   }
 }

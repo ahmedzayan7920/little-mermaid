@@ -1,65 +1,71 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/login_screen.dart';
+import 'package:puzzle/screens/call_pickup_screen.dart';
+import 'package:puzzle/screens/first_register_screen.dart';
+import 'package:puzzle/screens/home_screen.dart';
 import 'package:puzzle/screens/second_register_screen.dart';
 
-class FirstRegisterScreen extends StatefulWidget {
-  const FirstRegisterScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<FirstRegisterScreen> createState() => _FirstRegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController ssnController = TextEditingController();
-  TextEditingController birthDateController = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  File? image;
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
-    nameController.dispose();
-    ssnController.dispose();
-    birthDateController.dispose();
-    cityController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
-  void selectImage() async {
-    image = await pickImageFromGallery(context);
-    setState(() {});
-  }
-
-  void goNext() {
-    String name = nameController.text.trim();
-    String ssn = ssnController.text.trim();
-    String birtDate = birthDateController.text.trim();
-    String city = cityController.text.trim();
-    if (image != null) {
-      if (name.isNotEmpty && ssn.isNotEmpty && birtDate.isNotEmpty && city.isNotEmpty) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>  SecondRegisterScreen(
-                image: image!,
-                childName: name,
-                childSsn: ssn,
-                childBirthDate: birtDate,
-                childCity: city,
+  void login() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    if (email.isNotEmpty && password.isNotEmpty) {
+      try {
+        showLoadingDialog(context);
+        final result = await InternetAddress.lookup('example.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          )
+              .then((userValue) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  const CallPickupScreen(scaffold: HomeScreen()),
                 ),
-          ),
-        );
-      } else {
-        showSnackBar(context: context, content: "برجاء ملئ جميع الحقول");
+                (route) => false);
+          }).catchError((e) {
+            Navigator.pop(context);
+            if (e.code == 'user-not-found') {
+              showAwesomeDialog(context, "No user found for that email");
+            } else if (e.code == 'wrong-password') {
+              showAwesomeDialog(context, "Wrong password");
+            } else {
+              showAwesomeDialog(context, e.toString());
+            }
+          });
+        }
+      } on SocketException {
+        Navigator.pop(context);
+        showAwesomeDialog(context, "No Internet Connection");
       }
     } else {
-      showSnackBar(context: context, content: "برجاء اختيار الصورة الشخصية");
+      showSnackBar(context: context, content: "برجاء ملئ جميع الحقول");
     }
   }
 
@@ -98,7 +104,7 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                           Image.asset(Assets.assetsStar, width: 50, height: 50),
                           const SizedBox(width: 30),
                           Text(
-                            "معلومات الطفل",
+                            "تسجيل الدخول",
                             style: TextStyle(
                               fontSize: 40,
                               color: AppColors.white,
@@ -108,40 +114,14 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                           const Spacer(),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          image == null
-                              ? const CircleAvatar(
-                            backgroundImage: AssetImage(Assets.assetsProfile),
-                            radius: 50,
-                          )
-                              : CircleAvatar(
-                            backgroundImage: FileImage(image!),
-                            radius: 50,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: IconButton(
-                                onPressed: selectImage,
-                                icon: const Icon(
-                                  Icons.add_a_photo_outlined,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
+                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
-                          controller: nameController,
+                          controller: emailController,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
-                            labelText: "الاسم الثلاثي",
+                            labelText: "البريد الالكتروني",
                           ),
                         ),
                       ),
@@ -149,46 +129,10 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
-                          controller: ssnController,
+                          controller: passwordController,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
-                            labelText: "الرقم القومي",
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: TextFormField(
-                          controller: birthDateController,
-                          onTap: () async {
-                            DateTime? newDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1970),
-                              lastDate: DateTime.now(),
-                            );
-                            if (newDate == null) return;
-                            setState(() {
-                              birthDateController.text =
-                              "${newDate.year.toString()}-${newDate.month.toString().padLeft(2, '0')}-${newDate.day.toString().padLeft(2, '0')}";
-                            });
-                          },
-                          readOnly: true,
-                          style: TextStyle(color: AppColors.white),
-                          decoration: const InputDecoration(
-                            labelText: "تاريخ الميلاد",
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: TextFormField(
-                          controller: cityController,
-                          style: TextStyle(color: AppColors.white),
-                          decoration: const InputDecoration(
-                            labelText: "المحافظة",
+                            labelText: "كلمة السر",
                           ),
                         ),
                       ),
@@ -215,7 +159,7 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "تمتلك حساب؟",
+                                        "لا تمتلك حساب؟",
                                         style: TextStyle(
                                           color: AppColors.primary,
                                           fontSize: 20,
@@ -226,12 +170,12 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => const LoginScreen(),
+                                              builder: (context) => const FirstRegisterScreen(),
                                             ),
                                           );
                                         },
                                         child: Text(
-                                          "سجل دخول",
+                                          "انشاء حساب",
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 20,
@@ -247,7 +191,7 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                             Align(
                               alignment: Alignment.topCenter,
                               child: InkWell(
-                                onTap: goNext,
+                                onTap: login,
                                 child: Container(
                                   height: 50,
                                   width: double.infinity,

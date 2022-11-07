@@ -7,7 +7,9 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
+import 'package:puzzle/screens/call_pickup_screen.dart';
 import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/screens/login_screen.dart';
 
 class SecondRegisterScreen extends StatefulWidget {
   final File image;
@@ -36,7 +38,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController birthDateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  bool isLoading = false;
 
   @override
   void dispose() {
@@ -51,7 +52,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
 
   registerWithEmailAndPassword({required String email, required String password}) async {
     showLoadingDialog(context);
-
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -60,31 +60,30 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
           email: email,
           password: password,
         )
-            .then((userValue) {
-              storeFileToFirebase(uid: userValue.user!.uid, file: widget.image).then((downloadUrl)async{
-                var allDocs = await FirebaseFirestore.instance.collection('users').get();
-                int len = allDocs.docs.length;
-                int userPiece = len % 4 ;
-                FirebaseFirestore.instance.collection("users").doc(userValue.user!.uid).set({
-                  "uId": userValue.user!.uid,
-                  "profilePicture": downloadUrl,
-                  "name": widget.childName,
-                  "pieces": [userPiece]
-                }).then((value) {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                          (route) => false);
-                }).catchError((e) {
-                  Navigator.pop(context);
-                  showAwesomeDialog(context, e.toString());
-                });
-              }).catchError((e){
-
-              });
-
+            .then((userValue) async {
+          await userValue.user!.updateDisplayName(widget.childName);
+          storeFileToFirebase(uid: userValue.user!.uid, file: widget.image).then((downloadUrl) async {
+            var allDocs = await FirebaseFirestore.instance.collection('users').get();
+            int len = allDocs.docs.length;
+            int userPiece = len % 4;
+            FirebaseFirestore.instance.collection("users").doc(userValue.user!.uid).set({
+              "uId": userValue.user!.uid,
+              "profilePicture": downloadUrl,
+              "name": widget.childName,
+              "pieces": [userPiece],
+              "userPiece": userPiece,
+            }).then((value) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  const CallPickupScreen(scaffold: HomeScreen()),
+                  ),
+                  (route) => false);
+            }).catchError((e) {
+              Navigator.pop(context);
+              showAwesomeDialog(context, e.toString());
+            });
+          }).catchError((e) {});
         }).catchError((e) {
           Navigator.pop(context);
           if (e.toString().contains("weak-password")) {
@@ -103,9 +102,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
   }
 
   void register() {
-    setState(() {
-      isLoading = true;
-    });
     String name = nameController.text.trim();
     String ssn = ssnController.text.trim();
     String email = emailController.text.trim();
@@ -121,9 +117,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
         city.isNotEmpty) {
       registerWithEmailAndPassword(email: email, password: password);
     } else {
-      setState(() {
-        isLoading = false;
-      });
       showSnackBar(context: context, content: "برجاء ملئ جميع الحقول");
     }
   }
@@ -284,7 +277,14 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const LoginScreen(),
+                                              ),
+                                            );
+                                          },
                                           child: Text(
                                             "سجل دخول",
                                             style: TextStyle(
@@ -312,18 +312,14 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                     child: Center(
-                                      child: isLoading
-                                          ? Center(
-                                              child: CircularProgressIndicator(color: AppColors.primary),
-                                            )
-                                          : Text(
-                                              "انشاء حساب",
-                                              style: TextStyle(
-                                                color: AppColors.primary,
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
+                                      child: Text(
+                                        "انشاء حساب",
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -347,7 +343,7 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                     color: AppColors.white,
                   ),
                 ),
-              )
+              ),
             ],
           );
         }),
