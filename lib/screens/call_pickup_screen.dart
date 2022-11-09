@@ -25,17 +25,6 @@ class CallPickupScreen extends StatefulWidget {
 class _CallPickupScreenState extends State<CallPickupScreen> {
   final ref = FirebaseFirestore.instance.collection("calls").doc(FirebaseAuth.instance.currentUser!.uid);
 
-  @override
-  void initState() {
-    // FlutterRingtonePlayer.playRingtone();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    FlutterRingtonePlayer.stop();
-    super.dispose();
-  }
   void endCall({
     required BuildContext context,
     required String callerId,
@@ -73,7 +62,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                 if (snapshot.hasData && snapshot.data!.data() != null) {
                   CallModel call = CallModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
                   if (!call.hasDialled) {
-                    FlutterRingtonePlayer.playRingtone();
+                    FlutterRingtonePlayer.playRingtone(volume: 1, looping: true);
                     return Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(15),
@@ -113,10 +102,10 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                                 onTap: () {
                                   FlutterRingtonePlayer.stop();
                                   endCall(
-                                  context: context,
-                                  callerId: call.callerId,
-                                  receiverId: call.receiverId,
-                                );
+                                    context: context,
+                                    callerId: call.callerId,
+                                    receiverId: call.receiverId,
+                                  );
                                 },
                                 child: Container(
                                   width: 60,
@@ -168,6 +157,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                     );
                   }
                 }
+                FlutterRingtonePlayer.stop();
                 return widget.scaffold;
               },
             ),

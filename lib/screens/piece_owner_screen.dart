@@ -25,7 +25,6 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
   @override
   void initState() {
     ref = FirebaseFirestore.instance.collection('users').where("pieces", arrayContains: widget.pieceIndex);
-    // ref = FirebaseFirestore.instance.collection('users');
     super.initState();
   }
 

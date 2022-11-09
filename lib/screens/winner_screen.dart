@@ -16,7 +16,9 @@ class WinnerScreen extends StatefulWidget {
 
   const WinnerScreen({
     Key? key,
-    required this.userPiece, required this.name, required this.profilePicture,
+    required this.userPiece,
+    required this.name,
+    required this.profilePicture,
   }) : super(key: key);
 
   @override

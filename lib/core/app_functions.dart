@@ -34,7 +34,6 @@ Future<File?> pickImageFromGallery(BuildContext context) async {
 showAwesomeDialog(context, text) {
   return AwesomeDialog(
     context: context,
-    title: "Error",
     body: Text(text, style: const TextStyle(fontSize: 24)),
     dismissOnBackKeyPress: false,
     dismissOnTouchOutside: false,

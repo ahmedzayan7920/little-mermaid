@@ -22,14 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late String name;
   late String profilePicture;
   late List pieces;
-
-  final ref = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
-
   int colorIndex = 0;
+  final ref = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
     double buttonWidth = MediaQuery.of(context).size.width - 120;
+    Size size = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CallPickupScreen(
@@ -64,21 +63,26 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Image.asset(Assets.assetsStar, width: 50, height: 50),
                                 const SizedBox(width: 10),
-                                Text(
-                                  "ملفي الشخصي",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold,
+                                SizedBox(
+                                  height: size.height /13,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "ملفي الشخصي",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             Expanded(
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 20),
+                                margin: const EdgeInsets.symmetric(vertical: 15),
                                 height: double.infinity,
                                 child: Stack(
                                   children: [
@@ -86,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       return Align(
                                         alignment: Alignment.bottomCenter,
                                         child: Container(
-                                          height: constraints.maxHeight - 80,
+                                          height: constraints.maxHeight - size.height / 9,
                                           decoration: BoxDecoration(
                                             color: AppColors.white,
                                             borderRadius: BorderRadius.circular(40),
@@ -97,15 +101,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Align(
                                       alignment: Alignment.topCenter,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(bottom: 30, left: 30, right: 30),
+                                        padding: const EdgeInsets.only(bottom: 10, left: 35, right: 35),
                                         child: Column(
                                           children: [
                                             CircleAvatar(
-                                              radius: 80,
+                                              radius: size.height / 9,
                                               backgroundColor: AppColors.textColor,
                                               child: CircleAvatar(
-                                                backgroundImage: CachedNetworkImageProvider(user!["profilePicture"]),
-                                                radius: 75,
+                                                backgroundImage:
+                                                    CachedNetworkImageProvider(user!["profilePicture"]),
+                                                radius: size.height / 9.7,
                                               ),
                                             ),
                                             Text(
@@ -119,15 +124,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                             Divider(
+                                              height: 0,
                                               thickness: 2,
                                               color: AppColors.primary,
-                                              indent: 10,
-                                              endIndent: 10,
                                             ),
-                                            Expanded(
-                                              child: Directionality(
-                                                textDirection: TextDirection.ltr,
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: Expanded(
                                                 child: GridView.builder(
+
                                                   itemCount: 4,
                                                   shrinkWrap: true,
                                                   physics: const NeverScrollableScrollPhysics(),
@@ -136,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     crossAxisCount: 2,
                                                     mainAxisSpacing: 3,
                                                     crossAxisSpacing: 3,
-                                                    childAspectRatio: 1,
+                                                    childAspectRatio: 1 / 1,
                                                   ),
                                                   itemBuilder: (BuildContext context, int index) {
                                                     if (user["pieces"].contains(index)) {
@@ -146,15 +151,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             "assets/smile${index + 1}.png",
                                                           ),
                                                           Align(
-                                                            alignment: index == 0
-                                                                ? Alignment.topLeft
-                                                                : index == 1
-                                                                    ? Alignment.topRight
-                                                                    : index == 2
-                                                                        ? Alignment.bottomLeft
-                                                                        : Alignment.bottomRight,
+                                                          alignment: Alignment.topLeft,
                                                             child: Padding(
-                                                              padding: const EdgeInsets.all(10),
+                                                              padding: const EdgeInsets.all(8),
                                                               child: Text(
                                                                 "${index + 1}",
                                                                 style: TextStyle(
@@ -188,22 +187,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         },
                                                         child: Stack(
                                                           children: [
-                                                            // Image.asset(
-                                                            //   "assets/empty${index + 1}.png",
-                                                            // ),
                                                             Container(
                                                               color: color,
                                                               width: double.infinity,
                                                               height: double.infinity,
                                                             ),
                                                             Align(
-                                                              alignment: index == 0
-                                                                  ? Alignment.topLeft
-                                                                  : index == 1
-                                                                      ? Alignment.topRight
-                                                                      : index == 2
-                                                                          ? Alignment.bottomLeft
-                                                                          : Alignment.bottomRight,
+                                                              alignment: Alignment.topLeft,
                                                               child: Padding(
                                                                 padding: const EdgeInsets.all(10),
                                                                 child: Text(
@@ -253,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                         child: Container(
-                                          height: 50,
+                                          height: 48,
                                           width: (buttonWidth / 2) - 3,
                                           decoration: BoxDecoration(
                                             color: AppColors.buttonColor,
@@ -287,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                         child: Container(
-                                          height: 50,
+                                          height: 48,
                                           width: (buttonWidth / 2) - 3,
                                           decoration: BoxDecoration(
                                             color: AppColors.buttonColor,
@@ -322,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     },
                                     child: Container(
-                                      height: 50,
+                                      height: 48,
                                       width: buttonWidth,
                                       decoration: BoxDecoration(
                                         color: AppColors.buttonColor,

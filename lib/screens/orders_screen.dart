@@ -21,7 +21,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   void initState() {
-    // ref = FirebaseFirestore.instance.collection('users').where("pieces", arrayContains: widget.pieceIndex);
     ref = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)

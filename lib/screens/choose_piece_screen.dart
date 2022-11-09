@@ -24,7 +24,6 @@ class ChoosePieceScreen extends StatefulWidget {
 }
 
 class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
-  // List places = [3, 0, 1, 2];
   List places = [];
   int? selectedIndex;
   int colorIndex = 0;
