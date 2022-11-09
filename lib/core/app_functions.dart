@@ -42,7 +42,7 @@ showAwesomeDialog(context, text) {
       onPressed: () {
         Navigator.pop(context);
       },
-      child: const Text("Close"),
+      child: const Text("اغلاق"),
     ),
   ).show();
 }
@@ -53,7 +53,7 @@ showLoadingDialog(context) {
     context: context,
     builder: (context) {
       return const AlertDialog(
-        title: Text("Please Wait.."),
+        title: Text("يرجاء الانتظار..", textAlign: TextAlign.end),
         content: SizedBox(
           width: 80,
           height: 80,

@@ -89,9 +89,11 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
         }).catchError((e) {
           Navigator.pop(context);
           if (e.toString().contains("weak-password")) {
-            showAwesomeDialog(context, "The Password is too weak");
+            showAwesomeDialog(context, "كلمة السر ضعيفة");
           } else if (e.toString().contains("email-already-in-use")) {
-            showAwesomeDialog(context, "The account already exists for that email");
+            showAwesomeDialog(context, "هذا البريد الالكتروني مستخدم بالفعل");
+          }else if (e.code == 'invalid-email') {
+            showAwesomeDialog(context, "البريد الالكتروني غير صحيح");
           } else {
             showAwesomeDialog(context, e.toString());
           }
@@ -99,7 +101,7 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
       }
     } on SocketException {
       Navigator.pop(context);
-      showAwesomeDialog(context, "No Internet Connection");
+      showAwesomeDialog(context, "لا يوجد اتصال بالانترنت");
     }
   }
 

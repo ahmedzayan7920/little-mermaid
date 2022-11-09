@@ -24,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final ref = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
 
+  int colorIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     double buttonWidth = MediaQuery.of(context).size.width - 120;
@@ -159,6 +161,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ],
                                                       );
                                                     } else {
+                                                      Color color = Colors.red;
+                                                      if (colorIndex % 3 == 0){
+                                                        color = Colors.red;
+                                                      }else if (colorIndex % 3  == 1){
+                                                        color = Colors.green;
+                                                      }else  if (colorIndex % 3  == 2){
+                                                        color = Colors.blue;
+                                                      }
+                                                      colorIndex++;
                                                       return InkWell(
                                                         onTap: () async {
                                                           Navigator.push(
@@ -171,8 +182,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         },
                                                         child: Stack(
                                                           children: [
-                                                            Image.asset(
-                                                              "assets/empty${index + 1}.png",
+                                                            // Image.asset(
+                                                            //   "assets/empty${index + 1}.png",
+                                                            // ),
+                                                            Container(
+                                                              color: color,
+                                                              width: double.infinity,
+                                                              height: double.infinity,
                                                             ),
                                                             Align(
                                                               alignment: index == 0

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +24,35 @@ class ChoosePieceScreen extends StatefulWidget {
 }
 
 class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
-  List places = [3, 0, 1, 2];
+  // List places = [3, 0, 1, 2];
+  List places = [];
   int? selectedIndex;
+  int colorIndex = 0;
+
+  generateList() {
+    int n = generateNumber();
+    if (!places.contains(n)) {
+      places.add(n);
+    }
+    if (places.length != 4) {
+      generateList();
+    }
+  }
+
+  int generateNumber() {
+    return Random().nextInt(4);
+  }
+
+  @override
+  void initState() {
+    generateList();
+    super.initState();
+  }
 
   sendPiece() async {
-    if (selectedIndex != places.indexOf(widget.pieceIndex)){
+    if (selectedIndex != places.indexOf(widget.pieceIndex)) {
       showAwesomeDialog(context, "قم باختيار الصورة الصحيحة");
-    }else{
+    } else {
       showLoadingDialog(context);
       await FirebaseFirestore.instance.collection("users").doc(widget.uId).update({
         'pieces': FieldValue.arrayUnion([widget.pieceIndex]),
@@ -39,15 +63,15 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
           .collection("orders")
           .doc(widget.uId)
           .delete();
+      if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),
         ),
-            (route) => false,
+        (route) => false,
       );
     }
-
   }
 
   @override
@@ -122,6 +146,15 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                               ),
                             );
                           } else {
+                            Color color = Colors.red;
+                            if (colorIndex % 3 == 0) {
+                              color = Colors.red;
+                            } else if (colorIndex % 3 == 1) {
+                              color = Colors.green;
+                            } else if (colorIndex % 3 == 2) {
+                              color = Colors.blue;
+                            }
+                            colorIndex++;
                             return Container(
                               padding: index == 0
                                   ? const EdgeInsets.only(bottom: 30, right: 30)
@@ -140,10 +173,10 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                                       selectedIndex = index;
                                     });
                                   },
-                                  child: Image.asset(
-                                    "assets/empty${position + 1}.png",
-                                    width: 50,
-                                    height: 50,
+                                  child: Container(
+                                    color: color,
+                                    width: double.infinity,
+                                    height: double.infinity,
                                   ),
                                 ),
                               ),
@@ -156,9 +189,7 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: ElevatedButton(
-                      onPressed: selectedIndex == null
-                          ? null
-                          : sendPiece,
+                      onPressed: selectedIndex == null ? null : sendPiece,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 50),
                       ),

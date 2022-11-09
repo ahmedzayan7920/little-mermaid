@@ -9,7 +9,6 @@ import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/call_pickup_screen.dart';
 import 'package:puzzle/screens/first_register_screen.dart';
 import 'package:puzzle/screens/home_screen.dart';
-import 'package:puzzle/screens/second_register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -52,9 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
           }).catchError((e) {
             Navigator.pop(context);
             if (e.code == 'user-not-found') {
-              showAwesomeDialog(context, "No user found for that email");
+              showAwesomeDialog(context, "لا يوجد حساب مرتبط بهذا البريد الالكتروني");
             } else if (e.code == 'wrong-password') {
-              showAwesomeDialog(context, "Wrong password");
+              showAwesomeDialog(context, "كلمة السر غير صحيحة");
+            }else if (e.code == 'invalid-email') {
+              showAwesomeDialog(context, "البريد الالكتروني غير صحيح");
             } else {
               showAwesomeDialog(context, e.toString());
             }
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } on SocketException {
         Navigator.pop(context);
-        showAwesomeDialog(context, "No Internet Connection");
+        showAwesomeDialog(context, "لا يوجد اتصال بالانترنت");
       }
     } else {
       showSnackBar(context: context, content: "برجاء ملئ جميع الحقول");
