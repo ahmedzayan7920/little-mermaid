@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle/generated/assets.dart';
 
 class CustomBackground extends StatelessWidget {
   const CustomBackground({super.key});

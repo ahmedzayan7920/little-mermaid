@@ -53,7 +53,7 @@ showLoadingDialog(context) {
     context: context,
     builder: (context) {
       return const AlertDialog(
-        title: Text("يرجاء الانتظار..", textAlign: TextAlign.end),
+        title: Text("برجاء الانتظار", textAlign: TextAlign.end),
         content: SizedBox(
           width: 80,
           height: 80,

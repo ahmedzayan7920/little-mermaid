@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
@@ -24,6 +25,17 @@ class CallPickupScreen extends StatefulWidget {
 class _CallPickupScreenState extends State<CallPickupScreen> {
   final ref = FirebaseFirestore.instance.collection("calls").doc(FirebaseAuth.instance.currentUser!.uid);
 
+  @override
+  void initState() {
+    // FlutterRingtonePlayer.playRingtone();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    FlutterRingtonePlayer.stop();
+    super.dispose();
+  }
   void endCall({
     required BuildContext context,
     required String callerId,
@@ -61,6 +73,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                 if (snapshot.hasData && snapshot.data!.data() != null) {
                   CallModel call = CallModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
                   if (!call.hasDialled) {
+                    FlutterRingtonePlayer.playRingtone();
                     return Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(15),
@@ -97,11 +110,14 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               InkWell(
-                                onTap: () => endCall(
+                                onTap: () {
+                                  FlutterRingtonePlayer.stop();
+                                  endCall(
                                   context: context,
                                   callerId: call.callerId,
                                   receiverId: call.receiverId,
-                                ),
+                                );
+                                },
                                 child: Container(
                                   width: 60,
                                   height: 60,
@@ -119,6 +135,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                               const SizedBox(width: 25),
                               InkWell(
                                 onTap: () {
+                                  FlutterRingtonePlayer.stop();
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(

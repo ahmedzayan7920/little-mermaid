@@ -47,6 +47,7 @@ dependencies:
   agora_uikit: ^1.0.4
   permission_handler: ^10.0.0
   uuid: ^3.0.6
+  flutter_ringtone_player: ^3.2.0
 
 
 
@@ -63,7 +64,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/logo_foreground.png"
   adaptive_icon_background: "#996ce3"
   adaptive_icon_foreground: "assets/logo_foreground.png"
 # For information on the generic Dart part of this file, see the
