@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/core/agora_config.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/models/call_model.dart';
+import 'package:puzzle/screens/home_screen.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelId;
@@ -29,6 +30,26 @@ class _CallScreenState extends State<CallScreen> {
   void initState() {
     super.initState();
     client = AgoraClient(
+      agoraEventHandlers: AgoraRtcEventHandlers(
+        userOffline: (uid, reason) async{
+          await client!.engine.leaveChannel();
+        //   return Navigator.pushAndRemoveUntil(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const HomeScreen(),
+        //   ),
+        //       (route) => false,
+        // );
+        },
+        leaveChannel: (stats) =>
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+                  (route) => false,
+            ),
+      ),
       agoraConnectionData: AgoraConnectionData(
         appId: AgoraConfig.appId,
         channelName: widget.channelId,
@@ -62,34 +83,41 @@ class _CallScreenState extends State<CallScreen> {
         child: client == null
             ? const Center(child: CircularProgressIndicator())
             : Stack(
-                children: [
-                  AgoraVideoViewer(client: client!),
-                  AgoraVideoButtons(
-                    client: client!,
-                    disconnectButtonChild: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.red,
-                      child: IconButton(
-                        onPressed: () async {
-                          await client!.engine.leaveChannel().then((value){
-                            endCall(
-                              context: context,
-                              callerId: widget.call.callerId,
-                              receiverId: widget.call.receiverId,
-                            );
-                            Navigator.pop(context);
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.call_end_outlined,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                    ),
+          children: [
+            AgoraVideoViewer(client: client!),
+            AgoraVideoButtons(
+              client: client!,
+              disconnectButtonChild: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  onPressed: () async {
+                    await client!.engine.leaveChannel().then((value) {
+                      endCall(
+                        context: context,
+                        callerId: widget.call.callerId,
+                        receiverId: widget.call.receiverId,
+                      );
+                      // Navigator.pop(context);
+                      // Navigator.pushAndRemoveUntil(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const HomeScreen(),
+                      //   ),
+                      //   (route) => false,
+                      // );
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.call_end_outlined,
+                    color: Colors.white,
+                    size: 25,
                   ),
-                ],
+                ),
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

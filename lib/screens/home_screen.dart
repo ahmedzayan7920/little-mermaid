@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
-import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/call_pickup_screen.dart';
 import 'package:puzzle/screens/login_screen.dart';
 import 'package:puzzle/screens/orders_screen.dart';
 import 'package:puzzle/screens/piece_owner_screen.dart';
+import 'package:puzzle/screens/winner_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -96,8 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Column(
                                           children: [
                                             CircleAvatar(
-                                              backgroundImage: NetworkImage(user!["profilePicture"]),
-                                              radius: 80,
+                                              radius:80,backgroundColor: AppColors.textColor,
+                                              child: CircleAvatar(
+                                                backgroundImage: NetworkImage(user!["profilePicture"]),
+                                                radius: 75,
+                                              ),
                                             ),
                                             Text(
                                               user["name"],
@@ -120,7 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   itemCount: 4,
                                                   shrinkWrap: true,
                                                   physics: const NeverScrollableScrollPhysics(),
-                                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                                     crossAxisCount: 2,
                                                     mainAxisSpacing: 3,
                                                     crossAxisSpacing: 3,
@@ -128,10 +132,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   itemBuilder: (BuildContext context, int index) {
                                                     if (user["pieces"].contains(index)) {
-                                                      return Image.asset(
-                                                        "assets/smile${index + 1}.png",
-                                                        width: 50,
-                                                        height: 50,
+                                                      return Stack(
+                                                        children: [
+                                                          Image.asset(
+                                                            "assets/smile${index + 1}.png",
+                                                          ),
+                                                          Align(
+                                                            alignment: index == 0
+                                                                ? Alignment.topLeft
+                                                                : index == 1
+                                                                    ? Alignment.topRight
+                                                                    : index == 2
+                                                                        ? Alignment.bottomLeft
+                                                                        : Alignment.bottomRight,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(10),
+                                                              child: Text(
+                                                                "${index + 1}",
+                                                                style: TextStyle(
+                                                                  fontSize: 35,
+                                                                  color: AppColors.white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       );
                                                     } else {
                                                       return InkWell(
@@ -144,10 +169,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ),
                                                           );
                                                         },
-                                                        child: Image.asset(
-                                                          "assets/empty${index + 1}.png",
-                                                          width: 50,
-                                                          height: 50,
+                                                        child: Stack(
+                                                          children: [
+                                                            Image.asset(
+                                                              "assets/empty${index + 1}.png",
+                                                            ),
+                                                            Align(
+                                                              alignment: index == 0
+                                                                  ? Alignment.topLeft
+                                                                  : index == 1
+                                                                      ? Alignment.topRight
+                                                                      : index == 2
+                                                                          ? Alignment.bottomLeft
+                                                                          : Alignment.bottomRight,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(10),
+                                                                child: Text(
+                                                                  "${index + 1}",
+                                                                  style: TextStyle(
+                                                                    fontSize: 35,
+                                                                    color: AppColors.white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       );
                                                     }
@@ -173,35 +219,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          showLoadingDialog(context);
-                                          FirebaseFirestore.instance
-                                              .collection("users")
-                                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                                              .update({
-                                            'pieces': [user["userPiece"]],
-                                          }).then((value) {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        child: Expanded(
-                                          child: Container(
-                                            height: 50,
-                                            width: (buttonWidth / 2) - 3,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.buttonColor,
-                                              borderRadius: const BorderRadius.only(
-                                                topRight: Radius.circular(30),
-                                                bottomRight: Radius.circular(30),
-                                              ),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>  WinnerScreen(userPiece: user["userPiece"]),
                                             ),
-                                            child: Center(
-                                              child: Text(
-                                                "اعادة اللعبة",
-                                                style: TextStyle(
-                                                  color: AppColors.primary,
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: (buttonWidth / 2) - 3,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.buttonColor,
+                                            borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(30),
+                                              bottomRight: Radius.circular(30),
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "انهاء اللعبة",
+                                              style: TextStyle(
+                                                color: AppColors.primary,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ),
@@ -217,25 +258,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           );
                                         },
-                                        child: Expanded(
-                                          child: Container(
-                                            height: 50,
-                                            width: (buttonWidth / 2) - 3,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.buttonColor,
-                                              borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(30),
-                                                bottomLeft: Radius.circular(30),
-                                              ),
+                                        child: Container(
+                                          height: 50,
+                                          width: (buttonWidth / 2) - 3,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.buttonColor,
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(30),
+                                              bottomLeft: Radius.circular(30),
                                             ),
-                                            child: Center(
-                                              child: Text(
-                                                "الطلبات",
-                                                style: TextStyle(
-                                                  color: AppColors.primary,
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "الطلبات",
+                                              style: TextStyle(
+                                                color: AppColors.primary,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ),

@@ -5,87 +5,28 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/models/call_model.dart';
 import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/call_screen.dart';
-import 'package:uuid/uuid.dart';
+import 'package:puzzle/screens/home_screen.dart';
 
-class ProfileOwnerScreen extends StatefulWidget {
-  final String name;
-  final String profilePicture;
-  final String uid;
-  final int pieceIndex;
+class WinnerScreen extends StatefulWidget {
+  final int userPiece;
 
-  const ProfileOwnerScreen({
+  const WinnerScreen({
     Key? key,
-    required this.pieceIndex,
-    required this.name,
-    required this.profilePicture,
-    required this.uid,
+    required this.userPiece,
   }) : super(key: key);
 
   @override
-  State<ProfileOwnerScreen> createState() => _ProfileOwnerScreenState();
+  State<WinnerScreen> createState() => _WinnerScreenState();
 }
 
-class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
-
-  void startCall({
-    required BuildContext context,
-  }) async {
-    String callId = const Uuid().v1();
-    CallModel callerData = CallModel(
-      callerId: FirebaseAuth.instance.currentUser!.uid,
-      callerName: FirebaseAuth.instance.currentUser!.displayName?? "",
-      callerPicture: FirebaseAuth.instance.currentUser!.photoURL?? "",
-      receiverId: widget.uid,
-      receiverName: widget.name,
-      receiverPicture: widget.profilePicture,
-      callId: callId,
-      hasDialled: true,
-    );
-
-    CallModel receiverData = CallModel(
-      callerId: FirebaseAuth.instance.currentUser!.uid,
-      callerName: FirebaseAuth.instance.currentUser!.displayName?? "",
-      callerPicture: FirebaseAuth.instance.currentUser!.photoURL?? "",
-      receiverId: widget.uid,
-      receiverName: widget.name,
-      receiverPicture: widget.profilePicture,
-      callId: callId,
-      hasDialled: false,
-    );
-    try {
-      await FirebaseFirestore.instance
-          .collection("calls")
-          .doc(callerData.callerId)
-          .set(callerData.toMap());
-      await FirebaseFirestore.instance
-          .collection("calls")
-          .doc(callerData.receiverId)
-          .set(receiverData.toMap());
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CallScreen(
-            channelId: callerData.callId,
-            call: callerData,
-            isGroupChat: false,
-          ),
-        ),
-      );
-    } catch (error) {
-      showSnackBar(context: context, content: error.toString());
-    }
-  }
-
+class _WinnerScreenState extends State<WinnerScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CallPickupScreen(
-    scaffold: Scaffold(
+        scaffold: Scaffold(
           body: Stack(
             children: [
               const CustomBackground(),
@@ -112,7 +53,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                         Image.asset(Assets.assetsStar, width: 50, height: 50),
                         const SizedBox(width: 10),
                         Text(
-                          "هذه القطعة مع",
+                          "مبروك لقد فزت",
                           style: TextStyle(
                             fontSize: 40,
                             color: AppColors.white,
@@ -122,43 +63,55 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                       ],
                     ),
                     const Spacer(),
+                    Image.asset(Assets.assetsWinner, height: 120),
                     CircleAvatar(
-                      backgroundImage: NetworkImage(widget.profilePicture),
-                      radius: 150,
+                      radius: 120,
+                      backgroundColor: AppColors.textColor,
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.buttonColor,
+                        backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL ?? ""),
+                        radius: 110,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      widget.name,
+                      FirebaseAuth.instance.currentUser!.displayName ?? "",
                       style: TextStyle(
-                        color: AppColors.white,
+                        color: AppColors.textColor,
                         fontSize: 40,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const Spacer(),
                     InkWell(
                       onTap: () {
+                        showLoadingDialog(context);
                         FirebaseFirestore.instance
                             .collection("users")
-                            .doc(widget.uid)
-                            .collection("orders")
                             .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .set({
-                          "name": FirebaseAuth.instance.currentUser!.displayName,
-                          "uId": FirebaseAuth.instance.currentUser!.uid,
-                          "pieceIndex": widget.pieceIndex,
-                        }).then((value) => startCall(context: context));
+                            .update({
+                          'pieces': [widget.userPiece],
+                        }).then((value) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        });
                       },
                       child: Container(
                         height: 50,
                         width: double.infinity,
-                        margin: const EdgeInsets.symmetric(horizontal: 70),
+                        margin: const EdgeInsets.symmetric(horizontal: 60),
                         decoration: BoxDecoration(
                           color: AppColors.buttonColor,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
                           child: Text(
-                            "اتصل به",
+                            "أحصل علي الجائزة",
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 30,

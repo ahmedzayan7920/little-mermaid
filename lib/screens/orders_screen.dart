@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
-import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/call_pickup_screen.dart';
+import 'package:puzzle/screens/choose_piece_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({
@@ -70,6 +70,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         ),
                       ],
                     ),
+
                     Expanded(
                       child: StreamBuilder(
                           stream: ref.snapshots(),
@@ -77,71 +78,78 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             if (snapshot.hasData) {
                               List data = snapshot.data!.docs;
                               if (data.isNotEmpty) {
-                                return Expanded(
-                                  child: ListView.separated(
-                                    itemCount: data.length,
-                                    separatorBuilder: (_, i) => const SizedBox(height: 8),
-                                    itemBuilder: (_, index) {
-                                      Map<String, dynamic> order = data[index].data();
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 6),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          border: Border.all(
+                                return Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "الاسم",
+                                          style: TextStyle(
                                             color: AppColors.white,
-                                            width: 2,
+                                            fontSize: 20,
                                           ),
                                         ),
-                                        child: ListTile(
-                                          leading: Text(
-                                            "${order["pieceIndex"] + 1}",
-                                            style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 25,
-                                            ),
+                                        Text(
+                                          "رقم القطعة",
+                                          style: TextStyle(
+                                            color: AppColors.white,
+                                            fontSize: 20,
                                           ),
-                                          title: Text(
-                                            order["name"],
-                                            style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 25,
-                                            ),
-                                          ),
-                                          trailing: ElevatedButton(
-                                            onPressed: () {
-                                              showLoadingDialog(context);
-                                              FirebaseFirestore.instance
-                                                  .collection("users")
-                                                  .doc(order["uId"])
-                                                  .update({
-                                                'pieces': FieldValue.arrayUnion([order["pieceIndex"]]),
-                                              }).then((value) {
-                                                FirebaseFirestore.instance
-                                                    .collection("users")
-                                                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                                                    .collection("orders")
-                                                    .doc(order["uId"])
-                                                    .delete()
-                                                    .then((value) {
-                                                  Navigator.pop(context);
-                                                });
-                                              });
-                                            },
-                                            child: const Text(
-                                              "ارسال",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                        )
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: ListView.separated(
+                                        itemCount: data.length,
+                                        separatorBuilder: (context, i) => const SizedBox(height: 8),
+                                        itemBuilder: (context, index) {
+                                          Map<String, dynamic> order = data[index].data();
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 6),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              border: Border.all(
+                                                color: AppColors.white,
+                                                width: 2,
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                            child: ListTile(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ChoosePieceScreen(
+                                                      pieceIndex: order["pieceIndex"],
+                                                      uId: order["uId"],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              title: Text(
+                                                order["name"],
+                                                style: TextStyle(
+                                                  color: AppColors.white,
+                                                  fontSize: 25,
+                                                ),
+                                              ),
+                                              trailing: Text(
+                                                "${order["pieceIndex"] + 1}",
+                                                style: TextStyle(
+                                                  color: AppColors.white,
+                                                  fontSize: 25,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 );
                               } else {
-                                return  Center(
+                                return Center(
                                   child: Text(
                                     "لا يوجد طلبات",
                                     style: TextStyle(
@@ -158,6 +166,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           }),
                     ),
                   ],
+                ),
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ],

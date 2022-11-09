@@ -13,5 +13,6 @@ class Assets {
   static const String assetsSmile3 = 'assets/smile3.png';
   static const String assetsSmile4 = 'assets/smile4.png';
   static const String assetsStar = 'assets/star.png';
+  static const String assetsWinner = 'assets/winner.png';
 
 }

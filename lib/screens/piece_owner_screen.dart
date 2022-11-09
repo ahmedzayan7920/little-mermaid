@@ -141,6 +141,18 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                   ],
                 ),
               ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

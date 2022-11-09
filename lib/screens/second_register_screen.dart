@@ -61,8 +61,10 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
           password: password,
         )
             .then((userValue) async {
-          await userValue.user!.updateDisplayName(widget.childName);
+
           storeFileToFirebase(uid: userValue.user!.uid, file: widget.image).then((downloadUrl) async {
+            await userValue.user!.updateDisplayName(widget.childName);
+            await userValue.user!.updatePhotoURL(downloadUrl);
             var allDocs = await FirebaseFirestore.instance.collection('users').get();
             int len = allDocs.docs.length;
             int userPiece = len % 4;

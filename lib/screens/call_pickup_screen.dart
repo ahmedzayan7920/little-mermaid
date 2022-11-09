@@ -61,6 +61,9 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                 if (snapshot.hasData && snapshot.data!.data() != null) {
                   CallModel call = CallModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
                   if (!call.hasDialled) {
+                    print("----------------------------------");
+                    print(call.callerPicture);
+                    print("----------------------------------");
                     return Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(15),
@@ -93,7 +96,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               InkWell(
-                                onTap:() => endCall(
+                                onTap: () => endCall(
                                   context: context,
                                   callerId: call.callerId,
                                   receiverId: call.receiverId,
@@ -114,8 +117,8 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                               ),
                               const SizedBox(width: 25),
                               InkWell(
-                                onTap:(){
-                                  Navigator.push(
+                                onTap: () {
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => CallScreen(
@@ -125,7 +128,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                                       ),
                                     ),
                                   );
-                },
+                                },
                                 child: Container(
                                   width: 60,
                                   height: 60,
@@ -140,7 +143,6 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                                   ),
                                 ),
                               ),
-
                             ],
                           )
                         ],

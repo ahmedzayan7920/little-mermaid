@@ -11,6 +11,26 @@ abstract class AppTheme {
     splashColor: AppColors.lightPrimary,
     // ripple effect color
 
+    buttonTheme: ButtonThemeData(
+      shape: const StadiumBorder(),
+      disabledColor: AppColors.error,
+      buttonColor: AppColors.primary,
+      splashColor: AppColors.lightPrimary,
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        disabledBackgroundColor: AppColors.darkGrey,
+        disabledForegroundColor: AppColors.white,
+        backgroundColor: AppColors.buttonColor,
+        foregroundColor: AppColors.primary,
+        textStyle: TextStyle(color: AppColors.primary, fontSize: 30),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+    ),
+
     inputDecorationTheme: InputDecorationTheme(
       labelStyle: TextStyle(color: AppColors.white, fontSize: 20),
       floatingLabelStyle: TextStyle(color: AppColors.white, fontSize: 20),
