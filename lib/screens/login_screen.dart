@@ -106,6 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(width: 30),
                           Text(
                             "تسجيل الدخول",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 40,
                               color: AppColors.white,
@@ -161,6 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       Text(
                                         "لا تمتلك حساب؟",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: AppColors.primary,
                                           fontSize: 20,
@@ -177,6 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         },
                                         child: Text(
                                           "انشاء حساب",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 20,
@@ -204,6 +210,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Center(
                                     child: Text(
                                       "التالي",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontSize: 30,

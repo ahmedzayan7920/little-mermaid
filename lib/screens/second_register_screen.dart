@@ -61,7 +61,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
           password: password,
         )
             .then((userValue) async {
-
           storeFileToFirebase(uid: userValue.user!.uid, file: widget.image).then((downloadUrl) async {
             await userValue.user!.updateDisplayName(widget.childName);
             await userValue.user!.updatePhotoURL(downloadUrl);
@@ -74,11 +73,18 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
               "name": widget.childName,
               "pieces": [userPiece],
               "userPiece": userPiece,
+              "childSsn": widget.childSsn,
+              "childBirthDate": widget.childBirthDate,
+              "childCity": widget.childCity,
+              "parentName": nameController.text,
+              "parentSsn": ssnController.text,
+              "parentBirthDate": birthDateController.text,
+              "parentCity": cityController.text,
             }).then((value) {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  const CallPickupScreen(scaffold: HomeScreen()),
+                    builder: (context) => const CallPickupScreen(scaffold: HomeScreen()),
                   ),
                   (route) => false);
             }).catchError((e) {
@@ -92,7 +98,7 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
             showAwesomeDialog(context, "كلمة السر ضعيفة");
           } else if (e.toString().contains("email-already-in-use")) {
             showAwesomeDialog(context, "هذا البريد الالكتروني مستخدم بالفعل");
-          }else if (e.code == 'invalid-email') {
+          } else if (e.code == 'invalid-email') {
             showAwesomeDialog(context, "البريد الالكتروني غير صحيح");
           } else {
             showAwesomeDialog(context, e.toString());
@@ -162,6 +168,8 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                             const SizedBox(width: 20),
                             Text(
                               "معلومات ولي الأمر",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 40,
                                 color: AppColors.white,
@@ -219,6 +227,17 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 60),
                           child: TextFormField(
+                            controller: cityController,
+                            style: TextStyle(color: AppColors.white),
+                            decoration: const InputDecoration(
+                              labelText: "المحافظة",
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: TextFormField(
                             controller: birthDateController,
                             onTap: () async {
                               DateTime? newDate = await showDatePicker(
@@ -237,17 +256,6 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                             style: TextStyle(color: AppColors.white),
                             decoration: const InputDecoration(
                               labelText: "تاريخ الميلاد",
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 60),
-                          child: TextFormField(
-                            controller: cityController,
-                            style: TextStyle(color: AppColors.white),
-                            decoration: const InputDecoration(
-                              labelText: "المحافظة",
                             ),
                           ),
                         ),
@@ -275,6 +283,8 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                                       children: [
                                         Text(
                                           "تمتلك حساب؟",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 20,
@@ -291,6 +301,8 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                                           },
                                           child: Text(
                                             "سجل دخول",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: AppColors.primary,
                                               fontSize: 20,
@@ -318,6 +330,8 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                                     child: Center(
                                       child: Text(
                                         "انشاء حساب",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: AppColors.primary,
                                           fontSize: 30,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
@@ -61,6 +62,8 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                         const SizedBox(width: 10),
                         Text(
                           "هذه القطعة مع",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 40,
                             color: AppColors.white,
@@ -106,11 +109,13 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                         ),
                                         child: ListTile(
                                           leading: CircleAvatar(
-                                            backgroundImage: NetworkImage(child["profilePicture"]),
+                                            backgroundImage: CachedNetworkImageProvider(child["profilePicture"]),
                                             radius: 25,
                                           ),
                                           title: Text(
                                             child["name"],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: AppColors.white,
                                               fontSize: 25,
@@ -125,6 +130,8 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                 return Center(
                                   child: Text(
                                     "لا أحد يمتلك تلك القطعة",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: AppColors.white,
@@ -135,7 +142,13 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                             } else if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator());
                             } else {}
-                            return const Center(child: Text("Error"));
+                            return const Center(
+                              child: Text(
+                                "حدث خطا برجاء المحاولة لاحقا",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
                           }),
                     ),
                   ],

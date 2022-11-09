@@ -61,9 +61,6 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                 if (snapshot.hasData && snapshot.data!.data() != null) {
                   CallModel call = CallModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
                   if (!call.hasDialled) {
-                    print("----------------------------------");
-                    print(call.callerPicture);
-                    print("----------------------------------");
                     return Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(15),
@@ -71,7 +68,9 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Incoming Call",
+                            "مكالمة قادمة من ",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
@@ -85,6 +84,8 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                           const SizedBox(height: 50),
                           Text(
                             call.callerName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 25,
                               color: Colors.white,
@@ -144,7 +145,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     );

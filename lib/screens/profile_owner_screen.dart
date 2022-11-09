@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
           .collection("calls")
           .doc(callerData.receiverId)
           .set(receiverData.toMap());
-
+      if(!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -113,6 +114,8 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                         const SizedBox(width: 10),
                         Text(
                           "هذه القطعة مع",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 40,
                             color: AppColors.white,
@@ -123,12 +126,14 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                     ),
                     const Spacer(),
                     CircleAvatar(
-                      backgroundImage: NetworkImage(widget.profilePicture),
+                      backgroundImage: CachedNetworkImageProvider(widget.profilePicture),
                       radius: 150,
                     ),
                     const SizedBox(height: 20),
                     Text(
                       widget.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColors.white,
                         fontSize: 40,
@@ -159,6 +164,8 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                         child: Center(
                           child: Text(
                             "اتصل به",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 30,

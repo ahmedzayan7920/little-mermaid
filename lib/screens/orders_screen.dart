@@ -62,6 +62,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         const SizedBox(width: 10),
                         Text(
                           "الطلبات",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 40,
                             color: AppColors.white,
@@ -70,7 +72,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         ),
                       ],
                     ),
-
                     Expanded(
                       child: StreamBuilder(
                           stream: ref.snapshots(),
@@ -86,6 +87,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       children: [
                                         Text(
                                           "الاسم",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.white,
                                             fontSize: 20,
@@ -93,6 +96,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         ),
                                         Text(
                                           "رقم القطعة",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.white,
                                             fontSize: 20,
@@ -129,6 +134,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               },
                                               title: Text(
                                                 order["name"],
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 25,
@@ -136,6 +143,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               ),
                                               trailing: Text(
                                                 "${order["pieceIndex"] + 1}",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: AppColors.white,
                                                   fontSize: 25,
@@ -152,6 +161,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 return Center(
                                   child: Text(
                                     "لا يوجد طلبات",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: AppColors.white,
@@ -162,7 +173,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             } else if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator());
                             } else {}
-                            return const Center(child: Text("Error"));
+                            return const Center(
+                              child: Text(
+                                "حدث خطا برجاء المحاولة لاحقا",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
                           }),
                     ),
                   ],

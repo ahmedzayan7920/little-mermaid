@@ -95,6 +95,8 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                       const SizedBox(width: 10),
                       Text(
                         "اختر القطعة",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 40,
                           color: AppColors.white,
@@ -186,15 +188,17 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: ElevatedButton(
-                      onPressed: selectedIndex == null ? null : sendPiece,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                      child: const Text(
+                  ElevatedButton(
+                    onPressed: selectedIndex == null ? null : sendPiece,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
                         "ارسال القطعة",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

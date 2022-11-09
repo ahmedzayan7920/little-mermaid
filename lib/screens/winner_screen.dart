@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,12 @@ import 'package:puzzle/screens/home_screen.dart';
 
 class WinnerScreen extends StatefulWidget {
   final int userPiece;
+  final String name;
+  final String profilePicture;
 
   const WinnerScreen({
     Key? key,
-    required this.userPiece,
+    required this.userPiece, required this.name, required this.profilePicture,
   }) : super(key: key);
 
   @override
@@ -54,6 +57,8 @@ class _WinnerScreenState extends State<WinnerScreen> {
                         const SizedBox(width: 10),
                         Text(
                           "مبروك لقد فزت",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 40,
                             color: AppColors.white,
@@ -69,13 +74,15 @@ class _WinnerScreenState extends State<WinnerScreen> {
                       backgroundColor: AppColors.textColor,
                       child: CircleAvatar(
                         backgroundColor: AppColors.buttonColor,
-                        backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL ?? ""),
+                        backgroundImage: CachedNetworkImageProvider(widget.profilePicture),
                         radius: 110,
                       ),
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      FirebaseAuth.instance.currentUser!.displayName ?? "",
+                      widget.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColors.textColor,
                         fontSize: 40,
@@ -112,6 +119,8 @@ class _WinnerScreenState extends State<WinnerScreen> {
                         child: Center(
                           child: Text(
                             "أحصل علي الجائزة",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 30,

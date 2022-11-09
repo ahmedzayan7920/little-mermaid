@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(width: 10),
                                 Text(
                                   "ملفي الشخصي",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 40,
                                     color: AppColors.white,
@@ -98,14 +101,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Column(
                                           children: [
                                             CircleAvatar(
-                                              radius:80,backgroundColor: AppColors.textColor,
+                                              radius: 80,
+                                              backgroundColor: AppColors.textColor,
                                               child: CircleAvatar(
-                                                backgroundImage: NetworkImage(user!["profilePicture"]),
+                                                backgroundImage: CachedNetworkImageProvider(user!["profilePicture"]),
                                                 radius: 75,
                                               ),
                                             ),
                                             Text(
                                               user["name"],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.textColor,
                                                 fontSize: 25,
@@ -162,11 +168,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       );
                                                     } else {
                                                       Color color = Colors.red;
-                                                      if (colorIndex % 3 == 0){
+                                                      if (colorIndex % 3 == 0) {
                                                         color = Colors.red;
-                                                      }else if (colorIndex % 3  == 1){
+                                                      } else if (colorIndex % 3 == 1) {
                                                         color = Colors.green;
-                                                      }else  if (colorIndex % 3  == 2){
+                                                      } else if (colorIndex % 3 == 2) {
                                                         color = Colors.blue;
                                                       }
                                                       colorIndex++;
@@ -238,7 +244,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>  WinnerScreen(userPiece: user["userPiece"]),
+                                              builder: (context) => WinnerScreen(
+                                                userPiece: user["userPiece"],
+                                                name: user["name"],
+                                                profilePicture: user["profilePicture"],
+                                              ),
                                             ),
                                           );
                                         },
@@ -255,6 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Center(
                                             child: Text(
                                               "انهاء اللعبة",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.primary,
                                                 fontSize: 25,
@@ -287,6 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Center(
                                             child: Text(
                                               "الطلبات",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 color: AppColors.primary,
                                                 fontSize: 25,
@@ -317,6 +331,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Center(
                                         child: Text(
                                           "الطلبات",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 30,

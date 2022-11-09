@@ -99,6 +99,8 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                           const SizedBox(width: 30),
                           Text(
                             "معلومات الطفل",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 40,
                               color: AppColors.white,
@@ -160,6 +162,18 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
+                          controller: cityController,
+                          style: TextStyle(color: AppColors.white),
+                          decoration: const InputDecoration(
+                            labelText: "المحافظة",
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+                        child: TextFormField(
                           controller: birthDateController,
                           onTap: () async {
                             DateTime? newDate = await showDatePicker(
@@ -178,17 +192,6 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
                             labelText: "تاريخ الميلاد",
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: TextFormField(
-                          controller: cityController,
-                          style: TextStyle(color: AppColors.white),
-                          decoration: const InputDecoration(
-                            labelText: "المحافظة",
                           ),
                         ),
                       ),
@@ -216,6 +219,8 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                     children: [
                                       Text(
                                         "تمتلك حساب؟",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: AppColors.primary,
                                           fontSize: 20,
@@ -232,6 +237,8 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                         },
                                         child: Text(
                                           "سجل دخول",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 20,
@@ -259,6 +266,8 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                   child: Center(
                                     child: Text(
                                       "التالي",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontSize: 30,
