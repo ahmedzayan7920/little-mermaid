@@ -154,7 +154,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                         }).then((value) => startCall(context: context));
                       },
                       child: Container(
-                        height: 50,
+                        height: 47,
                         width: double.infinity,
                         margin: const EdgeInsets.symmetric(horizontal: 70),
                         decoration: BoxDecoration(
@@ -162,14 +162,17 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
-                          child: Text(
-                            "اتصل به",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Text(
+                              "اتصل به",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

@@ -111,7 +111,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                         });
                       },
                       child: Container(
-                        height: 50,
+                        height: 47,
                         width: double.infinity,
                         margin: const EdgeInsets.symmetric(horizontal: 60),
                         decoration: BoxDecoration(
@@ -119,14 +119,17 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
-                          child: Text(
-                            "أحصل علي الجائزة",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Text(
+                              "أحصل علي الجائزة",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

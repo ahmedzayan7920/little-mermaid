@@ -194,10 +194,13 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                     ),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: Text(
-                        "ارسال القطعة",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: Text(
+                          "ارسال القطعة",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ),

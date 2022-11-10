@@ -264,14 +264,17 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      "التالي",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Text(
+                                        "التالي",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),

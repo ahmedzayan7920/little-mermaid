@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                         child: Container(
-                                          height: 48,
+                                          height: 47,
                                           width: (buttonWidth / 2) - 3,
                                           decoration: BoxDecoration(
                                             color: AppColors.buttonColor,
@@ -253,14 +253,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           child: Center(
-                                            child: Text(
-                                              "انهاء اللعبة",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color: AppColors.primary,
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
+                                            child: FittedBox(
+                                              fit: BoxFit.fitHeight,
+                                              child: Text(
+                                                "انهاء اللعبة",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: AppColors.primary,
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -277,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                         child: Container(
-                                          height: 48,
+                                          height: 47,
                                           width: (buttonWidth / 2) - 3,
                                           decoration: BoxDecoration(
                                             color: AppColors.buttonColor,
@@ -287,14 +290,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           child: Center(
-                                            child: Text(
-                                              "الطلبات",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color: AppColors.primary,
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
+                                            child: FittedBox(
+                                              fit: BoxFit.fitHeight,
+                                              child: Text(
+                                                "الطلبات",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: AppColors.primary,
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -312,21 +318,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     },
                                     child: Container(
-                                      height: 48,
+                                      height: 47,
                                       width: buttonWidth,
                                       decoration: BoxDecoration(
                                         color: AppColors.buttonColor,
                                         borderRadius: BorderRadius.circular(30),
                                       ),
                                       child: Center(
-                                        child: Text(
-                                          "الطلبات",
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: AppColors.primary,
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
+                                        child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Text(
+                                            "الطلبات",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: AppColors.primary,
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
