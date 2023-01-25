@@ -30,15 +30,14 @@ class ProfileOwnerScreen extends StatefulWidget {
 }
 
 class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
-
   void startCall({
     required BuildContext context,
   }) async {
     String callId = const Uuid().v1();
     CallModel callerData = CallModel(
       callerId: FirebaseAuth.instance.currentUser!.uid,
-      callerName: FirebaseAuth.instance.currentUser!.displayName?? "",
-      callerPicture: FirebaseAuth.instance.currentUser!.photoURL?? "",
+      callerName: FirebaseAuth.instance.currentUser!.displayName ?? "",
+      callerPicture: FirebaseAuth.instance.currentUser!.photoURL ?? "",
       receiverId: widget.uid,
       receiverName: widget.name,
       receiverPicture: widget.profilePicture,
@@ -48,8 +47,8 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
 
     CallModel receiverData = CallModel(
       callerId: FirebaseAuth.instance.currentUser!.uid,
-      callerName: FirebaseAuth.instance.currentUser!.displayName?? "",
-      callerPicture: FirebaseAuth.instance.currentUser!.photoURL?? "",
+      callerName: FirebaseAuth.instance.currentUser!.displayName ?? "",
+      callerPicture: FirebaseAuth.instance.currentUser!.photoURL ?? "",
       receiverId: widget.uid,
       receiverName: widget.name,
       receiverPicture: widget.profilePicture,
@@ -57,15 +56,12 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
       hasDialled: false,
     );
     try {
-      await FirebaseFirestore.instance
-          .collection("calls")
-          .doc(callerData.callerId)
-          .set(callerData.toMap());
+      await FirebaseFirestore.instance.collection("calls").doc(callerData.callerId).set(callerData.toMap());
       await FirebaseFirestore.instance
           .collection("calls")
           .doc(callerData.receiverId)
           .set(receiverData.toMap());
-      if(!mounted) return;
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -86,7 +82,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CallPickupScreen(
-    scaffold: Scaffold(
+        scaffold: Scaffold(
           body: Stack(
             children: [
               const CustomBackground(),
@@ -164,15 +160,25 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                         child: Center(
                           child: FittedBox(
                             fit: BoxFit.fitHeight,
-                            child: Text(
-                              "اتصل به",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.call,
+                                  size: 30,
+                                  color: AppColors.primary,
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  "اتصل به",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'generated/assets.dart';
+
 class CustomBackground extends StatelessWidget {
   const CustomBackground({super.key});
 
@@ -9,11 +11,21 @@ class CustomBackground extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          color: const Color(0xffae76ec),
+          color: const Color(0xff7BD9F6),
           child: CustomPaint(
             size: size,
             painter: RPSCustomPainter(size),
           ),
+        ),
+        Positioned(
+          bottom: 20,
+          left: 0,
+          child: Image.asset(Assets.assetsStar, width: 50, height: 35),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 30,
+          child: Image.asset(Assets.assetsStar, width: 50, height: 25),
         ),
       ],
     );
@@ -29,7 +41,7 @@ class RPSCustomPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     size = this.size;
     Paint paint0 = Paint()
-      ..color = const Color(0xff996ce3)
+      ..color = const Color(0xff00BFFF)
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
     Path path0 = Path();
@@ -56,7 +68,7 @@ class RPSCustomPainter extends CustomPainter {
     canvas.drawPath(path0, paint0);
 
     Paint paint1 = Paint()
-      ..color = const Color(0xff996ce3)
+      ..color = const  Color(0xff00BFFF)
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
 

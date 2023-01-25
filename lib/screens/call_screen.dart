@@ -24,28 +24,35 @@ class CallScreen extends StatefulWidget {
 
 class _CallScreenState extends State<CallScreen> {
   AgoraClient? client;
-  String baseUrl = "https://whatsapp-clone-zayan.herokuapp.com";
+  String baseUrl = "https://whatsapp-clone-server-lwsj.onrender.com";
 
   @override
   void initState() {
     super.initState();
     client = AgoraClient(
-      agoraEventHandlers: AgoraRtcEventHandlers(
-        userOffline: (uid, reason) async {
-          await client!.engine.leaveChannel();
-        },
-        leaveChannel: (stats) => Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (route) => false,
-        ),
-      ),
       agoraConnectionData: AgoraConnectionData(
         appId: AgoraConfig.appId,
         channelName: widget.channelId,
         tokenUrl: baseUrl,
+      ),
+      agoraEventHandlers: AgoraRtcEventHandlers(
+        onUserOffline: (connection, remoteUid, reason) async {
+          await client!.engine.leaveChannel();
+          endCall(
+            context: context,
+            callerId: widget.call.callerId,
+            receiverId: widget.call.receiverId,
+          );
+        },
+        onLeaveChannel: (connection, stats) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+            (route) => false,
+          );
+        },
       ),
     );
     initAgora();
@@ -63,6 +70,15 @@ class _CallScreenState extends State<CallScreen> {
     try {
       await FirebaseFirestore.instance.collection("calls").doc(callerId).delete();
       await FirebaseFirestore.instance.collection("calls").doc(receiverId).delete();
+      if (mounted){
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (route) => false,
+        );
+      }
     } catch (error) {
       showSnackBar(context: context, content: error.toString());
     }
@@ -84,13 +100,12 @@ class _CallScreenState extends State<CallScreen> {
                       backgroundColor: Colors.red,
                       child: IconButton(
                         onPressed: () async {
-                          await client!.engine.leaveChannel().then((value) {
-                            endCall(
-                              context: context,
-                              callerId: widget.call.callerId,
-                              receiverId: widget.call.receiverId,
-                            );
-                          });
+                          await client!.engine.leaveChannel();
+                          endCall(
+                            context: context,
+                            callerId: widget.call.callerId,
+                            receiverId: widget.call.receiverId,
+                          );
                         },
                         icon: const Icon(
                           Icons.call_end_outlined,

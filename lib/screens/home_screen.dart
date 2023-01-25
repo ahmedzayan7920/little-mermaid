@@ -36,16 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
             children: [
               const CustomBackground(),
-              Positioned(
-                bottom: 20,
-                left: 0,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 35),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 30,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 25),
-              ),
               StreamBuilder(
                   stream: ref.snapshots(),
                   builder: (context, snapshot) {
@@ -106,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             CircleAvatar(
                                               radius: size.height / 9,
-                                              backgroundColor: AppColors.textColor,
+                                              backgroundColor: AppColors.white,
                                               child: CircleAvatar(
                                                 backgroundImage:
                                                     CachedNetworkImageProvider(user!["profilePicture"]),
