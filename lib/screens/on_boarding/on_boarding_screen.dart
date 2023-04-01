@@ -122,7 +122,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                                 currentIndex++;
                                               });
                                             } else if (currentIndex == (images.length - 1)) {
-                                              sharedPreferences.setBool("onBoarding", true);
+                                              sharedPreferences.setString(
+                                                  "id", FirebaseAuth.instance.currentUser!.uid);
                                               Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(
@@ -132,14 +133,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                                   (route) => false);
                                             }
                                           }).catchError((error) {
-                                            print("//////////////////");
-                                            print(error.toString());
-                                            print("//////////////////");
                                           });
                                         }).catchError((error) {
-                                          print("*******************");
-                                          print(error.toString());
-                                          print("*******************");
                                         });
                                       },
                                 child: Stack(

@@ -10,13 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/auth/login_screen.dart';
 
 late bool isLogin;
-late bool isOnBoarding;
 late SharedPreferences sharedPreferences;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPreferences = await SharedPreferences.getInstance();
-  isOnBoarding = sharedPreferences.getBool("onBoarding") ?? false;
   await Firebase.initializeApp();
   isLogin = FirebaseAuth.instance.currentUser != null ? true : false;
   runApp(const MyApp());
@@ -27,12 +25,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var id = sharedPreferences.getString("id") ?? "";
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
-      // home: isLogin ? const CallPickupScreen(scaffold: HomeScreen()) : const LoginScreen(),
       home: isLogin
-          ? isOnBoarding
+          ? id == FirebaseAuth.instance.currentUser!.uid
               ? const CallPickupScreen(scaffold: HomeScreen())
               : const OnBoardingScreen()
           : const LoginScreen(),

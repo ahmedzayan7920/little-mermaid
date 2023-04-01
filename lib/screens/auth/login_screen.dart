@@ -44,10 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
             password: password,
           )
               .then((userValue) {
+            var id = sharedPreferences.getString("id") ?? "";
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => isOnBoarding? const CallPickupScreen(scaffold: HomeScreen()):const OnBoardingScreen(),
+                  builder: (context) => id == FirebaseAuth.instance.currentUser!.uid
+                      ? const CallPickupScreen(scaffold: HomeScreen())
+                      : const OnBoardingScreen(),
                 ),
                 (route) => false);
           }).catchError((e) {
@@ -56,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
               showAwesomeDialog(context, "لا يوجد حساب مرتبط بهذا البريد الالكتروني");
             } else if (e.code == 'wrong-password') {
               showAwesomeDialog(context, "كلمة السر غير صحيحة");
-            }else if (e.code == 'invalid-email') {
+            } else if (e.code == 'invalid-email') {
               showAwesomeDialog(context, "البريد الالكتروني غير صحيح");
             } else {
               showAwesomeDialog(context, e.toString());

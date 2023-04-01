@@ -11,6 +11,8 @@ import 'package:puzzle/screens/home/orders_screen.dart';
 import 'package:puzzle/screens/home/piece_owner_screen.dart';
 import 'package:puzzle/screens/home/winner_screen.dart';
 
+import '../../main.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -179,8 +181,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (_) =>
-                                                                  PieceOwnerScreen(pieceIndex: index, level: user["level"]),
+                                                              builder: (_) => PieceOwnerScreen(
+                                                                  pieceIndex: index, level: user["level"]),
                                                             ),
                                                           );
                                                         },
@@ -195,10 +197,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               alignment: index == 0
                                                                   ? AlignmentDirectional.topStart
                                                                   : index == 1
-                                                                  ? AlignmentDirectional.topEnd
-                                                                  : index == 2
-                                                                  ? AlignmentDirectional.bottomStart
-                                                                  : AlignmentDirectional.bottomEnd,
+                                                                      ? AlignmentDirectional.topEnd
+                                                                      : index == 2
+                                                                          ? AlignmentDirectional.bottomStart
+                                                                          : AlignmentDirectional.bottomEnd,
                                                               child: Container(
                                                                 padding: const EdgeInsets.all(8),
                                                                 color: Colors.grey,
@@ -242,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                               builder: (context) => WinnerScreen(
                                                 userPiece: user["userPiece"],
-                                                level:user["level"],
+                                                level: user["level"],
                                                 name: user["name"],
                                                 profilePicture: user["profilePicture"],
                                               ),
@@ -282,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (_) =>  OrdersScreen(level: user["level"]),
+                                              builder: (_) => OrdersScreen(level: user["level"]),
                                             ),
                                           );
                                         },
@@ -320,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) =>  OrdersScreen(level: user["level"]),
+                                          builder: (_) => OrdersScreen(level: user["level"]),
                                         ),
                                       );
                                     },
@@ -359,13 +361,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.topLeft,
                   child: IconButton(
                     onPressed: () {
-                      FirebaseAuth.instance.signOut().then((value) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                          (route) => false,
-                        );
+                      sharedPreferences.remove("id").then((value) {
+                        FirebaseAuth.instance.signOut().then((value) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        });
                       });
                     },
                     icon: const Icon(Icons.logout),
