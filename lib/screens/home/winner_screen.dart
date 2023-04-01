@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,17 +5,19 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/home/home_screen.dart';
 
 class WinnerScreen extends StatefulWidget {
   final int userPiece;
+  final int level;
   final String name;
   final String profilePicture;
 
   const WinnerScreen({
     Key? key,
     required this.userPiece,
+    required this.level,
     required this.name,
     required this.profilePicture,
   }) : super(key: key);
@@ -28,6 +29,7 @@ class WinnerScreen extends StatefulWidget {
 class _WinnerScreenState extends State<WinnerScreen> {
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CallPickupScreen(
@@ -35,16 +37,6 @@ class _WinnerScreenState extends State<WinnerScreen> {
           body: Stack(
             children: [
               const CustomBackground(),
-              Positioned(
-                bottom: 20,
-                left: 0,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 35),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 30,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 25),
-              ),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -70,27 +62,69 @@ class _WinnerScreenState extends State<WinnerScreen> {
                       ],
                     ),
                     const Spacer(),
-                    Image.asset(Assets.assetsWinner, height: 120),
-                    CircleAvatar(
-                      radius: 120,
-                      backgroundColor: AppColors.textColor,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.buttonColor,
-                        backgroundImage: CachedNetworkImageProvider(widget.profilePicture),
-                        radius: 110,
-                      ),
+                    FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          Map map = (snapshot.data!.data() as Map)["rate"];
+                          var sortedMap = Map.fromEntries(
+                            map.entries.toList()
+                              ..sort(
+                                (e1, e2) => e1.value.compareTo(e2.value),
+                              ),
+                          );
+                          String image = Assets.onBoarding1;
+                          switch (sortedMap.keys.toList()[widget.level % 4]) {
+                            case "1":
+                              image = Assets.onBoarding2;
+                              break;
+                            case "2":
+                              image = Assets.onBoarding3;
+                              break;
+                            case "3":
+                              image = Assets.onBoarding4;
+                              break;
+                            default:
+                              image = Assets.onBoarding1;
+                              break;
+                          }
+                          return Image.asset(
+                            image,
+                            width: width,
+                            height: width,
+                            fit: BoxFit.fitWidth,
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(color: AppColors.primary),
+                          );
+                        }
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      widget.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.textColor,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // Image.asset(Assets.assetsWinner, height: 120),
+                    // CircleAvatar(
+                    //   radius: 120,
+                    //   backgroundColor: AppColors.textColor,
+                    //   child: CircleAvatar(
+                    //     backgroundColor: AppColors.buttonColor,
+                    //     backgroundImage: CachedNetworkImageProvider(widget.profilePicture),
+                    //     radius: 110,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 20),
+                    // Text(
+                    //   widget.name,
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    //   style: TextStyle(
+                    //     color: AppColors.textColor,
+                    //     fontSize: 40,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                     const Spacer(),
                     InkWell(
                       onTap: () {
@@ -100,6 +134,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                             .doc(FirebaseAuth.instance.currentUser!.uid)
                             .update({
                           'pieces': [widget.userPiece],
+                          "level": FieldValue.increment(1),
                         }).then((value) {
                           Navigator.pushAndRemoveUntil(
                             context,

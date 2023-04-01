@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/core/agora_config.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/models/call_model.dart';
-import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/screens/home/home_screen.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelId;

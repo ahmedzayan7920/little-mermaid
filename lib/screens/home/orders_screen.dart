@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/choose_piece_screen.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/home/choose_piece_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({
     Key? key,
+    required this.level,
   }) : super(key: key);
+  final int level;
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -37,16 +39,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
           body: Stack(
             children: [
               const CustomBackground(),
-              Positioned(
-                bottom: 20,
-                left: 0,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 35),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 30,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 25),
-              ),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -76,7 +68,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           stream: ref.snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              List data = snapshot.data!.docs;
+                              List data = snapshot.data!.docs
+                                  .where((e) => ((e.data()["level"] ?? 0) % 2) == (widget.level % 2))
+                                  .toList();
                               if (data.isNotEmpty) {
                                 return Column(
                                   children: [
@@ -126,6 +120,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   MaterialPageRoute(
                                                     builder: (context) => ChoosePieceScreen(
                                                       pieceIndex: order["pieceIndex"],
+                                                      level: order["level"],
                                                       uId: order["uId"],
                                                     ),
                                                   ),

@@ -7,8 +7,8 @@ import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/models/call_model.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/call_screen.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/call/call_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class ProfileOwnerScreen extends StatefulWidget {
@@ -16,10 +16,12 @@ class ProfileOwnerScreen extends StatefulWidget {
   final String profilePicture;
   final String uid;
   final int pieceIndex;
+  final int level;
 
   const ProfileOwnerScreen({
     Key? key,
     required this.pieceIndex,
+    required this.level,
     required this.name,
     required this.profilePicture,
     required this.uid,
@@ -147,6 +149,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                           "name": FirebaseAuth.instance.currentUser!.displayName,
                           "uId": FirebaseAuth.instance.currentUser!.uid,
                           "pieceIndex": widget.pieceIndex,
+                          "level": widget.level,
                         }).then((value) => startCall(context: context));
                       },
                       child: Container(

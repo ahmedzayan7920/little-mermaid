@@ -7,15 +7,17 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/screens/home/home_screen.dart';
 
 class ChoosePieceScreen extends StatefulWidget {
   final int pieceIndex;
+  final int level;
   final String uId;
 
   const ChoosePieceScreen({
     Key? key,
     required this.pieceIndex,
+    required this.level,
     required this.uId,
   }) : super(key: key);
 
@@ -130,8 +132,11 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                                           : const EdgeInsets.only(top: 30, left: 30),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.buttonColor, width: selectedIndex == index ? 5 : 0)),
+                                  border: Border.all(
+                                    color: AppColors.buttonColor,
+                                    width: selectedIndex == index ? 5 : 0,
+                                  ),
+                                ),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
@@ -139,22 +144,15 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                                     });
                                   },
                                   child: Image.asset(
-                                    "assets/smile${position + 1}.png",
+                                    "assets/${widget.level % 2}$position.jpeg",
                                     width: 50,
                                     height: 50,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
                             );
                           } else {
-                            Color color = Colors.red;
-                            if (colorIndex % 3 == 0) {
-                              color = Colors.red;
-                            } else if (colorIndex % 3 == 1) {
-                              color = Colors.green;
-                            } else if (colorIndex % 3 == 2) {
-                              color = Colors.blue;
-                            }
                             colorIndex++;
                             return Container(
                               padding: index == 0
@@ -166,18 +164,26 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                                           : const EdgeInsets.only(top: 30, left: 30),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.buttonColor, width: selectedIndex == index ? 5 : 0)),
+                                  border: Border.all(
+                                    color: AppColors.buttonColor,
+                                    width: selectedIndex == index ? 5 : 0,
+                                  ),
+                                ),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
                                       selectedIndex = index;
                                     });
                                   },
-                                  child: Container(
-                                    color: color,
+                                  child: SizedBox(
                                     width: double.infinity,
                                     height: double.infinity,
+                                    child: Image.asset(
+                                      "assets/${(colorIndex % 3) + 1}.jpeg",
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
                               ),

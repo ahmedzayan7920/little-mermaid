@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/login_screen.dart';
-import 'package:puzzle/screens/orders_screen.dart';
-import 'package:puzzle/screens/piece_owner_screen.dart';
-import 'package:puzzle/screens/winner_screen.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/auth/login_screen.dart';
+import 'package:puzzle/screens/home/orders_screen.dart';
+import 'package:puzzle/screens/home/piece_owner_screen.dart';
+import 'package:puzzle/screens/home/winner_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Image.asset(Assets.assetsStar, width: 50, height: 50),
                                 const SizedBox(width: 10),
                                 SizedBox(
-                                  height: size.height /13,
+                                  height: size.height / 13,
                                   child: FittedBox(
                                     fit: BoxFit.fitHeight,
                                     child: Text(
@@ -122,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               textDirection: TextDirection.ltr,
                                               child: Expanded(
                                                 child: GridView.builder(
-
                                                   itemCount: 4,
                                                   shrinkWrap: true,
                                                   physics: const NeverScrollableScrollPhysics(),
@@ -138,16 +137,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       return Stack(
                                                         children: [
                                                           Image.asset(
-                                                            "assets/smile${index + 1}.png",
+                                                            "assets/${user["level"] % 2}$index.jpeg",
+                                                            fit: BoxFit.fill,
+                                                            width: double.infinity,
+                                                            height: double.infinity,
                                                           ),
                                                           Align(
-                                                          alignment: Alignment.topLeft,
-                                                            child: Padding(
+                                                            alignment: index == 0
+                                                                ? AlignmentDirectional.topStart
+                                                                : index == 1
+                                                                    ? AlignmentDirectional.topEnd
+                                                                    : index == 2
+                                                                        ? AlignmentDirectional.bottomStart
+                                                                        : AlignmentDirectional.bottomEnd,
+                                                            child: Container(
                                                               padding: const EdgeInsets.all(8),
+                                                              color: Colors.grey,
                                                               child: Text(
                                                                 "${index + 1}",
                                                                 style: TextStyle(
-                                                                  fontSize: 35,
+                                                                  fontSize: 24,
                                                                   color: AppColors.white,
                                                                 ),
                                                               ),
@@ -171,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (_) =>
-                                                                  PieceOwnerScreen(pieceIndex: index),
+                                                                  PieceOwnerScreen(pieceIndex: index, level: user["level"]),
                                                             ),
                                                           );
                                                         },
@@ -183,13 +192,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               height: double.infinity,
                                                             ),
                                                             Align(
-                                                              alignment: Alignment.topLeft,
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(10),
+                                                              alignment: index == 0
+                                                                  ? AlignmentDirectional.topStart
+                                                                  : index == 1
+                                                                  ? AlignmentDirectional.topEnd
+                                                                  : index == 2
+                                                                  ? AlignmentDirectional.bottomStart
+                                                                  : AlignmentDirectional.bottomEnd,
+                                                              child: Container(
+                                                                padding: const EdgeInsets.all(8),
+                                                                color: Colors.grey,
                                                                 child: Text(
                                                                   "${index + 1}",
                                                                   style: TextStyle(
-                                                                    fontSize: 35,
+                                                                    fontSize: 24,
                                                                     color: AppColors.white,
                                                                   ),
                                                                 ),
@@ -226,6 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                               builder: (context) => WinnerScreen(
                                                 userPiece: user["userPiece"],
+                                                level:user["level"],
                                                 name: user["name"],
                                                 profilePicture: user["profilePicture"],
                                               ),
@@ -265,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (_) => const OrdersScreen(),
+                                              builder: (_) =>  OrdersScreen(level: user["level"]),
                                             ),
                                           );
                                         },
@@ -303,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => const OrdersScreen(),
+                                          builder: (_) =>  OrdersScreen(level: user["level"]),
                                         ),
                                       );
                                     },

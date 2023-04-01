@@ -7,15 +7,17 @@ class CustomBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Container(
-          color: const Color(0xff7BD9F6),
-          child: CustomPaint(
-            size: size,
-            painter: RPSCustomPainter(size),
-          ),
+          width: double.infinity,
+          height: double.infinity,
+          color: const Color(0xff00BFFF),
+          // child: CustomPaint(
+          //   size: size,
+          //   painter: RPSCustomPainter(size),
+          // ),
         ),
         Positioned(
           bottom: 20,

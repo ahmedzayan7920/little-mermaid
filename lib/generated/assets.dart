@@ -5,5 +5,9 @@ class Assets {
   static const String assetsProfile = 'assets/profile.png';
   static const String assetsStar = 'assets/star.png';
   static const String assetsWinner = 'assets/winner.png';
+  static const String onBoarding1 = 'assets/on_boarding_1.jpeg';
+  static const String onBoarding2 = 'assets/on_boarding_2.jpeg';
+  static const String onBoarding3 = 'assets/on_boarding_3.jpeg';
+  static const String onBoarding4 = 'assets/on_boarding_4.jpeg';
 
 }

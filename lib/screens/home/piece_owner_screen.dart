@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/profile_owner_screen.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/home/profile_owner_screen.dart';
 
 class PieceOwnerScreen extends StatefulWidget {
   final int pieceIndex;
+  final int level;
 
   const PieceOwnerScreen({
     Key? key,
     required this.pieceIndex,
+    required this.level,
   }) : super(key: key);
 
   @override
@@ -37,16 +39,6 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
           body: Stack(
             children: [
               const CustomBackground(),
-              Positioned(
-                bottom: 20,
-                left: 0,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 35),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 30,
-                child: Image.asset(Assets.assetsStar, width: 50, height: 25),
-              ),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -76,7 +68,9 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                           stream: ref.snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              List data = snapshot.data!.docs;
+                              List<QueryDocumentSnapshot<Map<String, dynamic>>> data = snapshot.data!.docs
+                                  .where((e) => ((e.data()["level"] ?? 0) % 2) == (widget.level % 2))
+                                  .toList();
                               if (data.isNotEmpty) {
                                 return ListView.separated(
                                   itemCount: data.length,
@@ -90,6 +84,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                           MaterialPageRoute(
                                             builder: (context) => ProfileOwnerScreen(
                                               pieceIndex: widget.pieceIndex,
+                                              level: widget.level,
                                               name: child["name"],
                                               profilePicture: child["profilePicture"],
                                               uid: child["uId"],
@@ -108,7 +103,8 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                         ),
                                         child: ListTile(
                                           leading: CircleAvatar(
-                                            backgroundImage: CachedNetworkImageProvider(child["profilePicture"]),
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(child["profilePicture"]),
                                             radius: 25,
                                           ),
                                           title: Text(

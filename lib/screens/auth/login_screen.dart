@@ -6,9 +6,11 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/first_register_screen.dart';
-import 'package:puzzle/screens/home_screen.dart';
+import 'package:puzzle/main.dart';
+import 'package:puzzle/screens/call/call_pickup_screen.dart';
+import 'package:puzzle/screens/auth/first_register_screen.dart';
+import 'package:puzzle/screens/home/home_screen.dart';
+import 'package:puzzle/screens/on_boarding/on_boarding_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -45,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  const CallPickupScreen(scaffold: HomeScreen()),
+                  builder: (context) => isOnBoarding? const CallPickupScreen(scaffold: HomeScreen()):const OnBoardingScreen(),
                 ),
                 (route) => false);
           }).catchError((e) {

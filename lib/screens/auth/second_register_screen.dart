@@ -7,9 +7,9 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call_pickup_screen.dart';
-import 'package:puzzle/screens/home_screen.dart';
-import 'package:puzzle/screens/login_screen.dart';
+import 'package:puzzle/screens/auth/login_screen.dart';
+
+import '../on_boarding/on_boarding_screen.dart';
 
 class SecondRegisterScreen extends StatefulWidget {
   final File image;
@@ -80,11 +80,12 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
               "parentSsn": ssnController.text,
               "parentBirthDate": birthDateController.text,
               "parentCity": cityController.text,
+              "level": 0,
             }).then((value) {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CallPickupScreen(scaffold: HomeScreen()),
+                    builder: (context) => const OnBoardingScreen(),
                   ),
                   (route) => false);
             }).catchError((e) {

@@ -8,7 +8,7 @@ import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/models/call_model.dart';
-import 'package:puzzle/screens/call_screen.dart';
+import 'package:puzzle/screens/call/call_screen.dart';
 
 class CallPickupScreen extends StatefulWidget {
   final Widget scaffold;

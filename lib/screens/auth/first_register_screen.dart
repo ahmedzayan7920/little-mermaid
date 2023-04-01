@@ -5,8 +5,8 @@ import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/login_screen.dart';
-import 'package:puzzle/screens/second_register_screen.dart';
+import 'package:puzzle/screens/auth/login_screen.dart';
+import 'package:puzzle/screens/auth/second_register_screen.dart';
 
 class FirstRegisterScreen extends StatefulWidget {
   const FirstRegisterScreen({Key? key}) : super(key: key);
