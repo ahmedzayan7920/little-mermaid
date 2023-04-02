@@ -127,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
                             labelText: "البريد الالكتروني",
@@ -138,6 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
                           controller: passwordController,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: true,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
                             labelText: "كلمة السر",

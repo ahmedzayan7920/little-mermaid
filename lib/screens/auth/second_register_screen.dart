@@ -196,6 +196,7 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 60),
                           child: TextFormField(
                             controller: ssnController,
+                            keyboardType: TextInputType.number,
                             style: TextStyle(color: AppColors.white),
                             decoration: const InputDecoration(
                               labelText: "الرقم القومي",
@@ -207,6 +208,7 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 60),
                           child: TextFormField(
                             controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
                             style: TextStyle(color: AppColors.white),
                             decoration: const InputDecoration(
                               labelText: "البريد الالكتروني",
@@ -218,6 +220,8 @@ class _SecondRegisterScreenState extends State<SecondRegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 60),
                           child: TextFormField(
                             controller: passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: true,
                             style: TextStyle(color: AppColors.white),
                             decoration: const InputDecoration(
                               labelText: "كلمة السر",

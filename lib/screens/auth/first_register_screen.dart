@@ -152,6 +152,7 @@ class _FirstRegisterScreenState extends State<FirstRegisterScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
                           controller: ssnController,
+                          keyboardType: TextInputType.number,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
                             labelText: "الرقم القومي",

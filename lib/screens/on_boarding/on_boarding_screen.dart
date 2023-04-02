@@ -68,12 +68,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         height: width,
                         fit: BoxFit.fitWidth,
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 24),
                       Text(
                         rate.toString(),
                         style: TextStyle(
                           color: AppColors.primary,
-                          fontSize: 30,
+                          fontSize: 40,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
