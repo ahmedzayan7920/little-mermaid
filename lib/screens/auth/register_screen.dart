@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:diacritic/diacritic.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen(),
                   ),
-                      (route) => false);
+                  (route) => false);
             }).catchError((e) {
               Navigator.pop(context);
               showAwesomeDialog(context, e.toString());
@@ -156,13 +157,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           image == null
                               ? const CircleAvatar(
-                            backgroundImage: AssetImage(Assets.assetsProfile),
-                            radius: 50,
-                          )
+                                  backgroundImage: AssetImage(Assets.assetsProfile),
+                                  radius: 50,
+                                )
                               : CircleAvatar(
-                            backgroundImage: FileImage(image!),
-                            radius: 50,
-                          ),
+                                  backgroundImage: FileImage(image!),
+                                  radius: 50,
+                                ),
                           Positioned(
                             bottom: 0,
                             right: 0,
@@ -302,25 +303,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-String getEmail({required String name}){
-  name = name.replaceAll("ى", "ي");
-  name = DartArabic.normalizeLetters(name);
-  name = DartArabic.normalizeAlef(name);
-  name = DartArabic.normalizeHamzaTasheel(name);
-  name = DartArabic.normalizeHamzaUniform(name);
-  name = DartArabic.normalizeLigature(name);
-  name = DartArabic.stripShadda(name);
-  name = DartArabic.stripTatweel(name);
-  name = DartArabic.stripDiacritics(name);
-  name = DartArabic.stripTashkeel(name);
-  name = DartArabic.stripHarakat(name);
-  String nameWithoutSpaces = name.replaceAll(' ', '');
-  String numericString = '';
-  for (int i = 0; i < nameWithoutSpaces.characters.length; i++) {
-    int codePoint = nameWithoutSpaces.characters.elementAt(i).codeUnitAt(0);
-    numericString += codePoint.toString();
+  String getEmail({required String name}) {
+    name = name.toLowerCase();
+    name = name.replaceAll("ى", "ي");
+    name = removeDiacritics(name);
+    name = DartArabic.normalizeLetters(name);
+    name = DartArabic.normalizeAlef(name);
+    name = DartArabic.normalizeHamzaTasheel(name);
+    name = DartArabic.normalizeHamzaUniform(name);
+    name = DartArabic.normalizeLigature(name);
+    name = DartArabic.stripShadda(name);
+    name = DartArabic.stripTatweel(name);
+    name = DartArabic.stripDiacritics(name);
+    name = DartArabic.stripTashkeel(name);
+    name = DartArabic.stripHarakat(name);
+    String nameWithoutSpaces = name.replaceAll(' ', '');
+    String numericString = '';
+    for (int i = 0; i < nameWithoutSpaces.characters.length; i++) {
+      int codePoint = nameWithoutSpaces.characters.elementAt(i).codeUnitAt(0);
+      numericString += codePoint.toString();
+    }
+    numericString += "@example.com";
+    return numericString;
   }
-  numericString += "@example.com";
-  return numericString;
-}
 }

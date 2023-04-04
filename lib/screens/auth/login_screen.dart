@@ -12,6 +12,7 @@ import 'package:puzzle/screens/call/call_pickup_screen.dart';
 import 'package:puzzle/screens/auth/register_screen.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
 import 'package:puzzle/screens/on_boarding/on_boarding_screen.dart';
+import 'package:diacritic/diacritic.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -247,8 +248,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String getEmail({required String name}){
+  String getEmail({required String name}) {
+    name = name.toLowerCase();
     name = name.replaceAll("ى", "ي");
+    name = removeDiacritics(name);
     name = DartArabic.normalizeLetters(name);
     name = DartArabic.normalizeAlef(name);
     name = DartArabic.normalizeHamzaTasheel(name);
