@@ -50,6 +50,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   firebase_database: ^10.1.0
   shared_preferences: ^2.1.0
+  dartarabic: ^0.1.2
 
 
 

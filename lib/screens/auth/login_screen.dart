@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dartarabic/dartarabic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
@@ -8,7 +9,7 @@ import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/main.dart';
 import 'package:puzzle/screens/call/call_pickup_screen.dart';
-import 'package:puzzle/screens/auth/first_register_screen.dart';
+import 'package:puzzle/screens/auth/register_screen.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
 import 'package:puzzle/screens/on_boarding/on_boarding_screen.dart';
 
@@ -20,27 +21,27 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
+    nameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
   void login() async {
-    String email = emailController.text.trim();
+    String name = nameController.text.trim();
     String password = passwordController.text.trim();
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if (name.isNotEmpty && password.isNotEmpty) {
       try {
         showLoadingDialog(context);
         final result = await InternetAddress.lookup('example.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           FirebaseAuth.instance
               .signInWithEmailAndPassword(
-            email: email,
+            email: getEmail(name: name),
             password: password,
           )
               .then((userValue) {
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }).catchError((e) {
             Navigator.pop(context);
             if (e.code == 'user-not-found') {
-              showAwesomeDialog(context, "لا يوجد حساب مرتبط بهذا البريد الالكتروني");
+              showAwesomeDialog(context, "لا يوجد حساب مرتبط بهذا الاسم");
             } else if (e.code == 'wrong-password') {
               showAwesomeDialog(context, "كلمة السر غير صحيحة");
             } else if (e.code == 'invalid-email') {
@@ -126,11 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: TextFormField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
+                          controller: nameController,
                           style: TextStyle(color: AppColors.white),
                           decoration: const InputDecoration(
-                            labelText: "البريد الالكتروني",
+                            labelText: "الاسم",
                           ),
                         ),
                       ),
@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => const FirstRegisterScreen(),
+                                              builder: (context) => const RegisterScreen(),
                                             ),
                                           );
                                         },
@@ -219,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: FittedBox(
                                       fit: BoxFit.fitHeight,
                                       child: Text(
-                                        "التالي",
+                                        "دخول",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -245,5 +245,27 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  String getEmail({required String name}){
+    name = name.replaceAll("ى", "ي");
+    name = DartArabic.normalizeLetters(name);
+    name = DartArabic.normalizeAlef(name);
+    name = DartArabic.normalizeHamzaTasheel(name);
+    name = DartArabic.normalizeHamzaUniform(name);
+    name = DartArabic.normalizeLigature(name);
+    name = DartArabic.stripShadda(name);
+    name = DartArabic.stripTatweel(name);
+    name = DartArabic.stripDiacritics(name);
+    name = DartArabic.stripTashkeel(name);
+    name = DartArabic.stripHarakat(name);
+    String nameWithoutSpaces = name.replaceAll(' ', '');
+    String numericString = '';
+    for (int i = 0; i < nameWithoutSpaces.characters.length; i++) {
+      int codePoint = nameWithoutSpaces.characters.elementAt(i).codeUnitAt(0);
+      numericString += codePoint.toString();
+    }
+    numericString += "@example.com";
+    return numericString;
   }
 }
