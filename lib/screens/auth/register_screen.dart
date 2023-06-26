@@ -76,12 +76,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               "userPiece": userPiece,
               "level": 0,
             }).then((value) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OnBoardingScreen(),
-                  ),
-                  (route) => false);
+               sharedPreferences.setString(
+                                                  "id", FirebaseAuth.instance.currentUser!.uid);
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const CallPickupScreen(scaffold: HomeScreen()),
+                                                  ),
+                                                  (route) => false);
             }).catchError((e) {
               Navigator.pop(context);
               showAwesomeDialog(context, e.toString());
