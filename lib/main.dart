@@ -30,9 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
       home: isLogin
-          ? id == FirebaseAuth.instance.currentUser!.uid
               ? const CallPickupScreen(scaffold: HomeScreen())
-              : const OnBoardingScreen()
           : const LoginScreen(),
     );
   }
