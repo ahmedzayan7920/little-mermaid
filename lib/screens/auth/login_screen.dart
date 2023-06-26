@@ -46,15 +46,15 @@ class _LoginScreenState extends State<LoginScreen> {
             password: password,
           )
               .then((userValue) {
-            var id = sharedPreferences.getString("id") ?? "";
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => id == FirebaseAuth.instance.currentUser!.uid
-                      ? const CallPickupScreen(scaffold: HomeScreen())
-                      : const OnBoardingScreen(),
-                ),
-                (route) => false);
+            sharedPreferences.setString(
+                                                  "id", FirebaseAuth.instance.currentUser!.uid);
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const CallPickupScreen(scaffold: HomeScreen()),
+                                                  ),
+                                                  (route) => false);
           }).catchError((e) {
             Navigator.pop(context);
             if (e.code == 'user-not-found') {
