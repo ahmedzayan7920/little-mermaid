@@ -77,16 +77,23 @@ class _WinnerScreenState extends State<WinnerScreen> {
                               ),
                           );
                           // print(selection);
+                          // print(data);
                           List noSort = [0];
+                          print(noSort);
                           for (int i = 0; i < data.keys.toList().length; i++) {
                             noSort.add(int.parse(data.keys.toList()[i]));
                           }
+                          print(noSort);
                           int level = (snapshot.data!.data() as Map)["level"];
                           String image = "";
                           if ((level % 4) == 0) {
                             image = "assets/image.jpeg";
-                          } else {
-                            image = "assets/selection_${noSort[((level % 4) + 1) % 4]}.jpeg";
+                          } else if ((level % 4) == 1){
+                            image = "assets/selection_${noSort[1] - 1}.jpeg";
+                          } else if ((level % 4) == 2){
+                            image = "assets/selection_${noSort[2] - 1}.jpeg";
+                          } else if ((level % 4) == 3){
+                            image = "assets/selection_${noSort[3] - 1}.jpeg";
                           }
                           return Image.asset(
                             image,
