@@ -10,8 +10,9 @@ import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/auth/login_screen.dart';
 import 'package:dartarabic/dartarabic.dart';
+import 'package:puzzle/screens/on_boarding/selection_screen.dart';
 
-import '../on_boarding/on_boarding_screen.dart';
+import '../../main.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -75,11 +76,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               "pieces": [userPiece],
               "userPiece": userPiece,
               "level": 0,
+              "selection": {
+                "0": 0,
+                "1": 0,
+                "2": 0,
+              },
             }).then((value) {
+              sharedPreferences.setString("id", FirebaseAuth.instance.currentUser!.uid);
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const OnBoardingScreen(),
+                    builder: (context) => const SelectionScreen(),
                   ),
                   (route) => false);
             }).catchError((e) {

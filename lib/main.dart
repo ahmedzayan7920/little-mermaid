@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/app_theme.dart';
 import 'package:puzzle/screens/call/call_pickup_screen.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
-import 'package:puzzle/screens/on_boarding/on_boarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/auth/login_screen.dart';
@@ -29,10 +28,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
+      // home: SelectionScreen(),
       home: isLogin
-          ? id == FirebaseAuth.instance.currentUser!.uid
               ? const CallPickupScreen(scaffold: HomeScreen())
-              : const OnBoardingScreen()
           : const LoginScreen(),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,6 +65,8 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
           .doc(callerData.receiverId)
           .set(receiverData.toMap());
       if (!mounted) return;
+
+      audioPlayer.stop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -73,10 +76,36 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
             isGroupChat: false,
           ),
         ),
+      ).then(
+            (value) => setAudio(),
       );
     } catch (error) {
       showSnackBar(context: context, content: error.toString());
     }
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    setAudio();
+  }
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    final url = await player.load("6.mp3");
+    audioPlayer.play(UrlSource(url.path));
   }
 
   @override

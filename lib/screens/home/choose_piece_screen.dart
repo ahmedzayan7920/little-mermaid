@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,17 +45,12 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
     return Random().nextInt(4);
   }
 
-  @override
-  void initState() {
-    generateList();
-    super.initState();
-  }
-
   sendPiece() async {
     if (selectedIndex != places.indexOf(widget.pieceIndex)) {
       showAwesomeDialog(context, "قم باختيار الصورة الصحيحة");
     } else {
       showLoadingDialog(context);
+      await setAudio("10.mp3");
       await FirebaseFirestore.instance.collection("users").doc(widget.uId).update({
         'pieces': FieldValue.arrayUnion([widget.pieceIndex]),
       });
@@ -70,9 +66,33 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),
         ),
-        (route) => false,
+            (route) => false,
       );
     }
+  }
+
+  @override
+  void initState() {
+    generateList();
+    super.initState();
+    setAudio("9.mp3");
+  }
+
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio(String fileName) async {
+    final url = await player.load(fileName);
+    audioPlayer.play(UrlSource(url.path));
   }
 
   @override
@@ -144,7 +164,7 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
                                     });
                                   },
                                   child: Image.asset(
-                                    "assets/${widget.level % 2}$position.jpeg",
+                                    "assets/${widget.level % 4}$position.jpeg",
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.fill,

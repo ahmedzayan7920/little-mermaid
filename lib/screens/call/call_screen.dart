@@ -1,4 +1,5 @@
 import 'package:agora_uikit/agora_uikit.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/core/agora_config.dart';
@@ -56,6 +57,23 @@ class _CallScreenState extends State<CallScreen> {
       ),
     );
     initAgora();
+    setAudio();
+  }
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    final url = await player.load("7.mp3");
+    audioPlayer.play(UrlSource(url.path));
   }
 
   initAgora() async {

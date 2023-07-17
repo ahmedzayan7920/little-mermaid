@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,23 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
   void initState() {
     ref = FirebaseFirestore.instance.collection('users').where("pieces", arrayContains: widget.pieceIndex);
     super.initState();
+    setAudio();
+  }
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    final url = await player.load("5.mp3");
+    audioPlayer.play(UrlSource(url.path));
   }
 
   @override
@@ -69,7 +87,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<QueryDocumentSnapshot<Map<String, dynamic>>> data = snapshot.data!.docs
-                                  .where((e) => ((e.data()["level"] ?? 0) % 2) == (widget.level % 2))
+                                  .where((e) => ((e.data()["level"] ?? 0) % 4) == (widget.level % 4))
                                   .toList();
                               if (data.isNotEmpty) {
                                 return ListView.separated(
@@ -79,6 +97,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                     Map<String, dynamic> child = data[index].data();
                                     return InkWell(
                                       onTap: () {
+                                        audioPlayer.stop();
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -90,6 +109,8 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                               uid: child["uId"],
                                             ),
                                           ),
+                                        ).then(
+                                              (value) => setAudio(),
                                         );
                                       },
                                       child: Container(
@@ -136,7 +157,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                               }
                             } else if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator());
-                            } else {}
+                            }
                             return const Center(
                               child: Text(
                                 "حدث خطا برجاء المحاولة لاحقا",

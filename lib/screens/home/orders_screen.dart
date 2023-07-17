@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,23 @@ class _OrdersScreenState extends State<OrdersScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("orders");
     super.initState();
+    setAudio();
+  }
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    final url = await player.load("8.mp3");
+    audioPlayer.play(UrlSource(url.path));
   }
 
   @override
@@ -69,7 +87,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List data = snapshot.data!.docs
-                                  .where((e) => ((e.data()["level"] ?? 0) % 2) == (widget.level % 2))
+                                  .where((e) => ((e.data()["level"] ?? 0) % 4) == (widget.level % 4))
                                   .toList();
                               if (data.isNotEmpty) {
                                 return Column(
@@ -115,6 +133,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                             ),
                                             child: ListTile(
                                               onTap: () {
+                                                audioPlayer.stop();
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -124,6 +143,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                       uId: order["uId"],
                                                     ),
                                                   ),
+                                                ).then(
+                                                      (value) => setAudio(),
                                                 );
                                               },
                                               title: Text(

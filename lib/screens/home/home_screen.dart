@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,27 @@ class _HomeScreenState extends State<HomeScreen> {
   late List pieces;
   int colorIndex = 0;
   final ref = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
+
+  final audioPlayer = AudioPlayer();
+  final player = AudioCache(prefix: "assets/audio/");
+
+  @override
+  void initState() {
+    super.initState();
+    setAudio();
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    player.clearAll();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    final url = await player.load("4.mp3");
+    audioPlayer.play(UrlSource(url.path));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,10 +158,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   itemBuilder: (BuildContext context, int index) {
                                                     if (user["pieces"].contains(index)) {
+                                                      Map selection = user["selection"];
+                                                      Map data = Map.fromEntries(
+                                                        selection.entries.toList()
+                                                          ..sort(
+                                                            (a, b) => a.value.compareTo(b.value),
+                                                          ),
+                                                      );
+                                                      // print(selection);
+                                                      List noSort = [0];
+                                                      for (int i = 0; i < data.keys.toList().length; i++) {
+                                                        noSort.add(int.parse(data.keys.toList()[i]));
+                                                      }
                                                       return Stack(
                                                         children: [
                                                           Image.asset(
-                                                            "assets/${user["level"] % 2}$index.jpeg",
+                                                            "assets/${noSort[user["level"] % 4]}$index.jpeg",
                                                             fit: BoxFit.fill,
                                                             width: double.infinity,
                                                             height: double.infinity,
@@ -178,12 +212,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       colorIndex++;
                                                       return InkWell(
                                                         onTap: () async {
+                                                          audioPlayer.stop();
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (_) => PieceOwnerScreen(
                                                                   pieceIndex: index, level: user["level"]),
                                                             ),
+                                                          ).then(
+                                                            (value) => setAudio(),
                                                           );
                                                         },
                                                         child: Stack(
@@ -239,6 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       InkWell(
                                         onTap: () {
+                                          audioPlayer.stop();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -249,6 +287,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 profilePicture: user["profilePicture"],
                                               ),
                                             ),
+                                          ).then(
+                                                (value) => setAudio(),
                                           );
                                         },
                                         child: Container(
@@ -281,11 +321,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       const SizedBox(width: 6),
                                       InkWell(
                                         onTap: () {
+                                          audioPlayer.stop();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (_) => OrdersScreen(level: user["level"]),
                                             ),
+                                          ).then(
+                                                (value) => setAudio(),
                                           );
                                         },
                                         child: Container(
@@ -319,11 +362,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )
                                 : InkWell(
                                     onTap: () {
+                                      audioPlayer.stop();
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (_) => OrdersScreen(level: user["level"]),
                                         ),
+                                      ).then(
+                                            (value) => setAudio(),
                                       );
                                     },
                                     child: Container(

@@ -11,7 +11,6 @@ import 'package:puzzle/main.dart';
 import 'package:puzzle/screens/call/call_pickup_screen.dart';
 import 'package:puzzle/screens/auth/register_screen.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
-import 'package:puzzle/screens/on_boarding/on_boarding_screen.dart';
 import 'package:diacritic/diacritic.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,15 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
             password: password,
           )
               .then((userValue) {
-            var id = sharedPreferences.getString("id") ?? "";
+            sharedPreferences.setString(
+                "id", FirebaseAuth.instance.currentUser!.uid);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => id == FirebaseAuth.instance.currentUser!.uid
-                      ? const CallPickupScreen(scaffold: HomeScreen())
-                      : const OnBoardingScreen(),
+                  builder: (context) =>
+                  const CallPickupScreen(scaffold: HomeScreen()),
                 ),
-                (route) => false);
+                    (route) => false);
           }).catchError((e) {
             Navigator.pop(context);
             if (e.code == 'user-not-found') {

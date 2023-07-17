@@ -6,7 +6,7 @@ import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/call/call_pickup_screen.dart';
-import 'package:puzzle/screens/home/home_screen.dart';
+import 'package:puzzle/screens/home/leaderboard_screen.dart';
 
 class WinnerScreen extends StatefulWidget {
   final int userPiece;
@@ -69,27 +69,24 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           .get(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          Map map = (snapshot.data!.data() as Map)["rate"];
-                          var sortedMap = Map.fromEntries(
-                            map.entries.toList()
+                          Map selection = (snapshot.data!.data() as Map)["selection"];
+                          Map data = Map.fromEntries(
+                            selection.entries.toList()
                               ..sort(
-                                (e1, e2) => e1.value.compareTo(e2.value),
+                                (a, b) => a.value.compareTo(b.value),
                               ),
                           );
-                          String image = Assets.onBoarding1;
-                          switch (sortedMap.keys.toList()[widget.level % 4]) {
-                            case "1":
-                              image = Assets.onBoarding2;
-                              break;
-                            case "2":
-                              image = Assets.onBoarding3;
-                              break;
-                            case "3":
-                              image = Assets.onBoarding4;
-                              break;
-                            default:
-                              image = Assets.onBoarding1;
-                              break;
+                          // print(selection);
+                          List noSort = [0];
+                          for (int i = 0; i < data.keys.toList().length; i++) {
+                            noSort.add(int.parse(data.keys.toList()[i]));
+                          }
+                          int level = (snapshot.data!.data() as Map)["level"];
+                          String image = "";
+                          if ((level % 4) == 0) {
+                            image = "assets/image.jpeg";
+                          } else {
+                            image = "assets/selection_${noSort[((level % 4) + 1) % 4]}.jpeg";
                           }
                           return Image.asset(
                             image,
@@ -135,13 +132,13 @@ class _WinnerScreenState extends State<WinnerScreen> {
                             .update({
                           'pieces': [widget.userPiece],
                           "level": FieldValue.increment(1),
+                          "score": FieldValue.increment(10),
                         }).then((value) {
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
+                              builder: (context) => const CallPickupScreen(scaffold: LeaderboardScreen()),
                             ),
-                            (route) => false,
                           );
                         });
                       },
