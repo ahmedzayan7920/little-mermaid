@@ -24,11 +24,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var id = sharedPreferences.getString("id") ?? "";
+    // var id = sharedPreferences.getString("id") ?? "";
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
-      // home: SelectionScreen(),
+      // home: const SelectionScreen(),
       home: isLogin
               ? const CallPickupScreen(scaffold: HomeScreen())
           : const LoginScreen(),

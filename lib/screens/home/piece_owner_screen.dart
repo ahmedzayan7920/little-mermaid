@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
@@ -34,7 +35,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
 
   final audioPlayer = AudioPlayer();
   final player = AudioCache(prefix: "assets/audio/");
-
+  bool isPlaying = true;
 
   @override
   void dispose() {
@@ -46,6 +47,14 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
   Future setAudio() async {
     final url = await player.load("5.mp3");
     audioPlayer.play(UrlSource(url.path));
+    setState(() {
+      isPlaying = true;
+    });
+    audioPlayer.onPlayerComplete.listen((state) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
   }
 
   @override
@@ -55,6 +64,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
       child: CallPickupScreen(
         scaffold: Scaffold(
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               const CustomBackground(),
               Padding(
@@ -110,7 +120,7 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                                             ),
                                           ),
                                         ).then(
-                                              (value) => setAudio(),
+                                          (value) => setAudio(),
                                         );
                                       },
                                       child: Container(
@@ -181,6 +191,19 @@ class _PieceOwnerScreenState extends State<PieceOwnerScreen> {
                     color: AppColors.white,
                   ),
                 ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: isPlaying
+                    ? RotationTransition(
+                        turns: const AlwaysStoppedAnimation(.25),
+                        child: Image.asset(
+                          "assets/gif/2.gif",
+                          width: 250,
+                          height: 250,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),

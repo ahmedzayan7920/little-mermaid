@@ -32,6 +32,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   final audioPlayer = AudioPlayer();
   final player = AudioCache(prefix: "assets/audio/");
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -49,6 +50,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Future setAudio(String fileName) async {
     final url = await player.load(fileName);
     audioPlayer.play(UrlSource(url.path));
+    audioPlayer.onPlayerComplete.listen((state) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
   }
 
   @override
@@ -57,6 +63,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         body: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
             const CustomBackground(),
             Padding(
@@ -187,6 +194,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   ),
                 ],
               ),
+            ),
+            Positioned(
+              bottom: 0,
+              child: isPlaying?Image.asset(
+                "assets/gif/1.gif",
+                width: 250,
+                height: 250,
+              ):const SizedBox.shrink(),
             ),
           ],
         ),

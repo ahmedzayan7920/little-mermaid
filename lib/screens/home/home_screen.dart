@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final audioPlayer = AudioPlayer();
   final player = AudioCache(prefix: "assets/audio/");
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -47,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future setAudio() async {
     final url = await player.load("4.mp3");
     audioPlayer.play(UrlSource(url.path));
+    setState(() {
+      isPlaying = true;
+    });
+    audioPlayer.onPlayerComplete.listen((state) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
   }
 
   @override
@@ -58,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: CallPickupScreen(
         scaffold: Scaffold(
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               const CustomBackground(),
               StreamBuilder(
@@ -422,6 +432,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: AppColors.white,
                   ),
                 ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: isPlaying?Image.asset(
+                  "assets/gif/4.gif",
+                  width: 250,
+                  height: 250,
+                ):const SizedBox.shrink(),
               ),
             ],
           ),

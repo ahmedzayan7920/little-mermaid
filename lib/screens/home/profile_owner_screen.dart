@@ -94,6 +94,7 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
 
   final audioPlayer = AudioPlayer();
   final player = AudioCache(prefix: "assets/audio/");
+  bool isPlaying = true;
 
 
   @override
@@ -106,6 +107,14 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
   Future setAudio() async {
     final url = await player.load("6.mp3");
     audioPlayer.play(UrlSource(url.path));
+    setState(() {
+      isPlaying = true;
+    });
+    audioPlayer.onPlayerComplete.listen((state) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
   }
 
   @override
@@ -230,6 +239,15 @@ class _ProfileOwnerScreenState extends State<ProfileOwnerScreen> {
                     color: AppColors.white,
                   ),
                 ),
+              ),
+              Positioned(
+                bottom: -60,
+                right: -20,
+                child: isPlaying?Image.asset(
+                  "assets/gif/2.gif",
+                  width: 200,
+                  height: 200,
+                ):const SizedBox.shrink(),
               ),
             ],
           ),

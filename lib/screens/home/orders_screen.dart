@@ -34,6 +34,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   final audioPlayer = AudioPlayer();
   final player = AudioCache(prefix: "assets/audio/");
+  bool isPlaying = true;
 
 
   @override
@@ -46,6 +47,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Future setAudio() async {
     final url = await player.load("8.mp3");
     audioPlayer.play(UrlSource(url.path));
+    setState(() {
+      isPlaying = true;
+    });
+    audioPlayer.onPlayerComplete.listen((state) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
   }
 
   @override
@@ -55,6 +64,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       child: CallPickupScreen(
         scaffold: Scaffold(
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               const CustomBackground(),
               Padding(
@@ -211,6 +221,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     color: AppColors.white,
                   ),
                 ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: isPlaying
+                    ? RotationTransition(
+                  turns: const AlwaysStoppedAnimation(.25),
+                  child: Image.asset(
+                    "assets/gif/2.gif",
+                    width: 250,
+                    height: 250,
+                  ),
+                )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),
