@@ -1,16 +1,6 @@
-# puzzle
+# This app helps kids improve their communication skills and smarts through engaging puzzles and video calls.
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+https://github.com/ahmedzayan7920/puzzle/assets/88338596/bb7ad517-e823-4a2e-85bb-777413e9886d
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
