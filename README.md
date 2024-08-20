@@ -11,8 +11,8 @@
 </ul>
 
 <h2>Demo Video</h2>
-
-https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f
+<p>Watch the demo video to see Little Mermaid in action:</p>
+<p><a href="https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f">Demo Video</a></p>
 
 <h2>Installation</h2>
 <p>To get started with Little Mermaid, follow these steps:</p>
@@ -30,6 +30,7 @@ https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f
     <pre><code>flutter run</code></pre>
   </li>
 </ol>
+
 <h2>Contributing</h2>
 <p>Contributions are welcome! To contribute to Little Mermaid, follow these steps:</p>
 <ol>
@@ -47,4 +48,3 @@ https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f
   <li><strong>WhatsApp</strong>: <a href="https://wa.me/201008537926">+201008537926</a></li>
   <li><strong>Email</strong>: <a href="mailto:ahmedabdallazayan@gmail.com">ahmedabdallazayan@gmail.com</a></li>
 </ul>
-
