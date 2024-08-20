@@ -11,7 +11,6 @@
 </ul>
 
 <h2>Demo Video</h2>
-<p>Watch the video below to see Little Mermaid in action:</p>
 
 https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f
 
