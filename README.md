@@ -12,7 +12,11 @@
 
 <h2>Demo Video</h2>
 <p>Watch the demo video to see Little Mermaid in action:</p>
-<p><a href="https://github.com/user-attachments/assets/a2989df0-e85c-4e0b-8589-d6281caff96f">Demo Video</a></p>
+<p><a href="https://github.com/user-attachments/assets/5182fa81-2262-4019-a667-e368f14feee7">Demo Video</a></p>
+
+
+
+
 
 <h2>Installation</h2>
 <p>To get started with Little Mermaid, follow these steps:</p>
