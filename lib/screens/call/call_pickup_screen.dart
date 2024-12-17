@@ -62,7 +62,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                 if (snapshot.hasData && snapshot.data!.data() != null) {
                   CallModel call = CallModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
                   if (!call.hasDialled) {
-                    FlutterRingtonePlayer.playRingtone(volume: 1, looping: true);
+                    FlutterRingtonePlayer().playRingtone(volume: 1, looping: true);
                     return Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(15),
@@ -100,7 +100,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  FlutterRingtonePlayer.stop();
+                                  FlutterRingtonePlayer().stop();
                                   endCall(
                                     context: context,
                                     callerId: call.callerId,
@@ -124,7 +124,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                               const SizedBox(width: 25),
                               InkWell(
                                 onTap: () {
-                                  FlutterRingtonePlayer.stop();
+                                  FlutterRingtonePlayer().stop();
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -157,7 +157,7 @@ class _CallPickupScreenState extends State<CallPickupScreen> {
                     );
                   }
                 }
-                FlutterRingtonePlayer.stop();
+                FlutterRingtonePlayer().stop();
                 return widget.scaffold;
               },
             ),
