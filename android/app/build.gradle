@@ -57,12 +57,14 @@ android {
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
+    release {
+        signingConfig signingConfigs.debug // Use your release signing config here
+        minifyEnabled true
+        shrinkResources true
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
+}
+
 }
 
 flutter {
@@ -71,6 +73,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:31.0.2')
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation platform('com.google.firebase:firebase-bom:32.1.0') // Update BOM
+    implementation 'androidx.multidex:multidex:2.0.1' // Update multidex
+    implementation 'com.google.firebase:firebase-messaging:23.1.2' // Latest Firebase Messaging
 }
+
