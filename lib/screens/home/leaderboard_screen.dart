@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/core/app_colors.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
 
+import '../../core/firebase_constants.dart';
+import '../../core/models/user_model.dart';
 import '../../generated/assets.dart';
-import '../call/call_pickup_screen.dart';
 
 class LeaderboardScreen extends StatefulWidget {
-  const LeaderboardScreen({Key? key}) : super(key: key);
+  const LeaderboardScreen({super.key});
 
   @override
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
@@ -54,12 +55,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           children: [
             StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('users')
+                    .collection(FirebaseConstants.users)
                     .orderBy("score", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>> data = snapshot.data!.docs.toList();
+                    List<QueryDocumentSnapshot<Map<String, dynamic>>> data =
+                        snapshot.data!.docs.toList();
+                    final List<UserModel> users =
+                        data.map((e) => UserModel.fromJson(e.data())).toList();
                     if (data.isNotEmpty) {
                       return Column(
                         children: [
@@ -95,172 +99,200 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                   width: double.infinity,
                                   child: Stack(
                                     children: [
-                                      Positioned(
-                                        left: 10,
-                                        top: 60,
-                                        child: SizedBox(
-                                          width: 120,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 60,
-                                                backgroundColor: AppColors.white,
-                                                child: CircleAvatar(
-                                                  backgroundImage: CachedNetworkImageProvider(
-                                                      data[1].data()["profilePicture"]),
-                                                  radius: 57,
+                                      if (data.length >= 2)
+                                        Positioned(
+                                          left: 10,
+                                          top: 60,
+                                          child: SizedBox(
+                                            width: 120,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 60,
+                                                  backgroundColor:
+                                                      AppColors.white,
+                                                  child: CircleAvatar(
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                            users[1]
+                                                                .child
+                                                                .profilePicture),
+                                                    radius: 57,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                data[1].data()["name"],
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
+                                                Text(
+                                                  users[1].child.name,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                data[1].data()["score"].toString(),
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w900,
+                                                Text(
+                                                  users[1].score.toString(),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: 10,
-                                        top: 60,
-                                        child: SizedBox(
-                                          width: 120,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 60,
-                                                backgroundColor: AppColors.white,
-                                                child: CircleAvatar(
-                                                  backgroundImage: CachedNetworkImageProvider(
-                                                      data[2].data()["profilePicture"]),
-                                                  radius: 57,
-                                                ),
-                                              ),
-                                              Text(
-                                                data[2].data()["name"],
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                data[2].data()["score"].toString(),
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: (size.width - 160) / 2,
-                                        child: SizedBox(
-                                          width: 160,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 80,
-                                                backgroundColor: AppColors.white,
-                                                child: CircleAvatar(
-                                                  backgroundImage: CachedNetworkImageProvider(
-                                                      data[0].data()["profilePicture"]),
-                                                  radius: 75,
-                                                ),
-                                              ),
-                                              Text(
-                                                data[0].data()["name"],
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                data[0].data()["score"].toString(),
-                                                textAlign: TextAlign.center,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 50,
-                                        top: 30,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                          ),
-                                          child: const Text(
-                                            "2",
-                                            style: TextStyle(
-                                              color: Color(0xFFbbbbbb),
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold,
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        right: 50,
-                                        top: 30,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                          ),
-                                          child: const Text(
-                                            "3",
-                                            style: TextStyle(
-                                              color: Color(0xFFe78c43),
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.bold,
+                                      if (data.length >= 3)
+                                        Positioned(
+                                          right: 10,
+                                          top: 60,
+                                          child: SizedBox(
+                                            width: 120,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 60,
+                                                  backgroundColor:
+                                                      AppColors.white,
+                                                  child: CircleAvatar(
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                      users[2]
+                                                          .child
+                                                          .profilePicture,
+                                                    ),
+                                                    radius: 57,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  users[2].child.name,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  users[2].score.toString(),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      if (data.isNotEmpty)
+                                        Positioned(
+                                          left: (size.width - 160) / 2,
+                                          child: SizedBox(
+                                            width: 160,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 80,
+                                                  backgroundColor:
+                                                      AppColors.white,
+                                                  child: CircleAvatar(
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                      users[0]
+                                                          .child
+                                                          .profilePicture,
+                                                    ),
+                                                    radius: 75,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  users[0].child.name,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  users[0].score.toString(),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      if (data.length >= 2)
+                                        Positioned(
+                                          left: 50,
+                                          top: 30,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white,
+                                            ),
+                                            child: const Text(
+                                              "2",
+                                              style: TextStyle(
+                                                color: Color(0xFFbbbbbb),
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      if (data.length >= 3)
+                                        Positioned(
+                                          right: 50,
+                                          top: 30,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white,
+                                            ),
+                                            child: const Text(
+                                              "3",
+                                              style: TextStyle(
+                                                color: Color(0xFFe78c43),
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -269,19 +301,25 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 8),
                               child: ListView.separated(
                                 padding: EdgeInsets.zero,
-                                itemCount: data.length - 3,
+                                itemCount:
+                                    data.length > 3 ? data.length - 3 : 0,
                                 physics: const BouncingScrollPhysics(),
-                                separatorBuilder: (context, index) => const SizedBox(height: 16),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 16),
                                 itemBuilder: (context, index) {
-                                  Map<String, dynamic> child = data[index + 3].data();
+                                  Map<String, dynamic> child =
+                                      data[index + 3].data();
                                   return Container(
                                     width: double.infinity,
                                     height: 80,
                                     decoration: BoxDecoration(
-                                        color: AppColors.textColor, borderRadius: BorderRadius.circular(16)),
+                                        color: AppColors.textColor,
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 20),
@@ -296,13 +334,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                         const SizedBox(width: 20),
                                         CircleAvatar(
                                           backgroundImage:
-                                              CachedNetworkImageProvider(child["profilePicture"]),
+                                              CachedNetworkImageProvider(
+                                                  child['child']
+                                                      ["profilePicture"]),
                                           radius: 25,
                                         ),
                                         const SizedBox(width: 20),
                                         Expanded(
                                           child: Text(
-                                            child["name"],
+                                            child['child']["name"],
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
@@ -335,7 +375,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const CallPickupScreen(scaffold: HomeScreen()),
+                                  builder: (context) => const HomeScreen(),
                                 ),
                                 (route) => false,
                               );
@@ -343,7 +383,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             child: Container(
                               height: 47,
                               width: double.infinity,
-                              margin: const EdgeInsets.symmetric(horizontal: 60),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 60),
                               decoration: BoxDecoration(
                                 color: AppColors.buttonColor,
                                 borderRadius: BorderRadius.circular(30),
@@ -381,7 +422,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                         ),
                       );
                     }
-                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   return const Center(
@@ -392,12 +434,14 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     ),
                   );
                 }),
-            isPlaying?Image.asset(
-              "assets/gif/11.gif",
-              width: size.width,
-              height: size.height,
-              fit: BoxFit.fill,
-            ):const SizedBox.shrink(),
+            isPlaying
+                ? Image.asset(
+                    "assets/gif/11.gif",
+                    width: size.width,
+                    height: size.height,
+                    fit: BoxFit.fill,
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

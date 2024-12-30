@@ -4,15 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background.dart';
 import 'package:puzzle/core/app_colors.dart';
+import 'package:puzzle/core/models/user_model.dart';
 import 'package:puzzle/generated/assets.dart';
-import 'package:puzzle/screens/call/call_pickup_screen.dart';
-import 'package:puzzle/screens/home/choose_piece_screen.dart';
+import 'package:puzzle/features/piece/ui/views/choose_piece_screen.dart';
+
+import '../../core/firebase_constants.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({
-    Key? key,
+    super.key,
     required this.level,
-  }) : super(key: key);
+  });
   final int level;
 
   @override
@@ -25,7 +27,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   void initState() {
     ref = FirebaseFirestore.instance
-        .collection('users')
+        .collection(FirebaseConstants.users)
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("orders");
     super.initState();
@@ -61,8 +63,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: CallPickupScreen(
-        scaffold: Scaffold(
+      child: Scaffold(
           body: Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -97,7 +98,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List data = snapshot.data!.docs
-                                  .where((e) => ((e.data()["level"] ?? 0) % 4) == (widget.level % 4))
+                                  .where((e) => ((e.data()[UserModelKeys.level] ?? 0) % 4) == (widget.level % 4))
                                   .toList();
                               if (data.isNotEmpty) {
                                 return Column(
@@ -238,7 +239,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 }

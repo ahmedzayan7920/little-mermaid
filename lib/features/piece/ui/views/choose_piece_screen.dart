@@ -10,17 +10,19 @@ import 'package:puzzle/core/app_functions.dart';
 import 'package:puzzle/generated/assets.dart';
 import 'package:puzzle/screens/home/home_screen.dart';
 
+import '../../../../core/firebase_constants.dart';
+
 class ChoosePieceScreen extends StatefulWidget {
   final int pieceIndex;
   final int level;
   final String uId;
 
   const ChoosePieceScreen({
-    Key? key,
+    super.key,
     required this.pieceIndex,
     required this.level,
     required this.uId,
-  }) : super(key: key);
+  });
 
   @override
   State<ChoosePieceScreen> createState() => _ChoosePieceScreenState();
@@ -51,11 +53,11 @@ class _ChoosePieceScreenState extends State<ChoosePieceScreen> {
     } else {
       showLoadingDialog(context);
       await setAudio("10.mp3");
-      await FirebaseFirestore.instance.collection("users").doc(widget.uId).update({
+      await FirebaseFirestore.instance.collection(FirebaseConstants.users).doc(widget.uId).update({
         'pieces': FieldValue.arrayUnion([widget.pieceIndex]),
       });
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection(FirebaseConstants.users)
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("orders")
           .doc(widget.uId)

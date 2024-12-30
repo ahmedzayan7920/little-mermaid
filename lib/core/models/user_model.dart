@@ -11,6 +11,7 @@ abstract class UserModelKeys {
   static const String level = 'level';
   static const String selection = 'selection';
   static const String questionnaireAnswersModel = 'questionnaireAnswersModel';
+  static const String score = 'score';
 }
 
 class UserModel {
@@ -23,6 +24,7 @@ class UserModel {
   final int level;
   final Map<String, int> selection;
   final QuestionnaireAnswersModel questionnaireAnswersModel;
+  final num score;
 
   UserModel({
     required this.id,
@@ -34,6 +36,7 @@ class UserModel {
     required this.level,
     required this.selection,
     required this.questionnaireAnswersModel,
+    required this.score,
   });
 
   UserModel copyWith({
@@ -46,6 +49,7 @@ class UserModel {
     int? level,
     Map<String, int>? selection,
     QuestionnaireAnswersModel? questionnaireAnswersModel,
+    num? score,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -58,6 +62,7 @@ class UserModel {
       selection: selection ?? this.selection,
       questionnaireAnswersModel:
           questionnaireAnswersModel ?? this.questionnaireAnswersModel,
+      score: score ?? this.score,
     );
   }
 
@@ -73,23 +78,27 @@ class UserModel {
       UserModelKeys.selection: selection,
       UserModelKeys.questionnaireAnswersModel:
           questionnaireAnswersModel.toJson(),
+      UserModelKeys.score: score,
     };
   }
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     try {
       return UserModel(
-        id: map[UserModelKeys.id] as String,
-        email: map[UserModelKeys.email] as String,
-        child: ChildModel.fromJson(map[UserModelKeys.child] as Map<String, dynamic>),
-        parent: ParentModel.fromJson(map[UserModelKeys.parent] as Map<String, dynamic>),
-        userPiece: map[UserModelKeys.userPiece] as int,
-        pieces: List<int>.from((map[UserModelKeys.pieces] as List?)?.map((e) => e) ?? []),
-        level: map[UserModelKeys.level] as int,
-        selection: Map<String, int>.from(map[UserModelKeys.selection] as Map? ?? {}),
+        id: map[UserModelKeys.id] ?? '',
+        email: map[UserModelKeys.email] ?? '',
+        child: ChildModel.fromJson(map[UserModelKeys.child] ?? {}),
+        parent: ParentModel.fromJson(map[UserModelKeys.parent] ?? {}),
+        userPiece: map[UserModelKeys.userPiece] ?? 0,
+        pieces: List<int>.from(
+            (map[UserModelKeys.pieces] as List?)?.map((e) => e) ?? []),
+        level: map[UserModelKeys.level] ?? 0,
+        selection:
+            Map<String, int>.from(map[UserModelKeys.selection] as Map? ?? {}),
         questionnaireAnswersModel: QuestionnaireAnswersModel.fromJson(
-          map[UserModelKeys.questionnaireAnswersModel] as Map<String, dynamic>,
+          map[UserModelKeys.questionnaireAnswersModel] ?? {},
         ),
+        score: map[UserModelKeys.score] ?? 0,
       );
     } catch (e) {
       throw Exception('Error parsing UserModel from JSON: ${e.toString()}');
@@ -98,7 +107,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, email: $email, child: $child, parent: $parent, userPiece: $userPiece, pieces: $pieces, level: $level, selection: $selection, questionnaireAnswersModel: $questionnaireAnswersModel)';
+    return 'UserModel(id: $id, email: $email, child: $child, parent: $parent, userPiece: $userPiece, pieces: $pieces, level: $level, selection: $selection, questionnaireAnswersModel: $questionnaireAnswersModel, score: $score)';
   }
 
   @override
@@ -113,7 +122,8 @@ class UserModel {
         listEquals(other.pieces, pieces) &&
         other.level == level &&
         mapEquals(other.selection, selection) &&
-        other.questionnaireAnswersModel == questionnaireAnswersModel;
+        other.questionnaireAnswersModel == questionnaireAnswersModel &&
+        other.score == score;
   }
 
   @override
@@ -125,8 +135,9 @@ class UserModel {
         userPiece.hashCode ^
         pieces.hashCode ^
         level.hashCode ^
-        selection.hashCode^
-        questionnaireAnswersModel.hashCode;
+        selection.hashCode ^
+        questionnaireAnswersModel.hashCode ^
+        score.hashCode;
   }
 }
 
@@ -187,12 +198,12 @@ class ChildModel {
   factory ChildModel.fromJson(Map<String, dynamic> map) {
     try {
       return ChildModel(
-        name: map[ChildModelKeys.name] as String,
-        profilePicture: map[ChildModelKeys.profilePicture] as String,
-        dateOfBirth: map[ChildModelKeys.dateOfBirth] as String,
-        ssn: map[ChildModelKeys.ssn] as String,
+        name: map[ChildModelKeys.name] ?? '',
+        profilePicture: map[ChildModelKeys.profilePicture] ?? '',
+        dateOfBirth: map[ChildModelKeys.dateOfBirth] ?? '',
+        ssn: map[ChildModelKeys.ssn] ?? '',
         gender: GenderType.values.firstWhere(
-          (element) => element.name == map[ChildModelKeys.gender] as String,
+          (element) => element.name == (map[ChildModelKeys.gender] ?? ''),
           orElse: () => GenderType.male,
         ),
       );
@@ -297,11 +308,11 @@ class ParentModel {
   factory ParentModel.fromJson(Map<String, dynamic> map) {
     try {
       return ParentModel(
-        name: map[ParentModelKeys.name] as String,
-        ssn: map[ParentModelKeys.ssn] as String,
-        relation: map[ParentModelKeys.relation] as String,
-        governorate: map[ParentModelKeys.governorate] as String,
-        hasClinic: map[ParentModelKeys.hasClinic] as bool,
+        name: map[ParentModelKeys.name] ?? '',
+        ssn: map[ParentModelKeys.ssn] ?? '',
+        relation: map[ParentModelKeys.relation] ?? '',
+        governorate: map[ParentModelKeys.governorate] ?? '',
+        hasClinic: map[ParentModelKeys.hasClinic] ?? false,
         clinicName: map[ParentModelKeys.clinicName],
         clinicAddress: map[ParentModelKeys.clinicAddress],
         clinicDoctorName: map[ParentModelKeys.clinicDoctorName],

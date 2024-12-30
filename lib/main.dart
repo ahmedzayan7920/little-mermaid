@@ -1,37 +1,76 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:puzzle/app_theme.dart';
-import 'package:puzzle/screens/call/call_pickup_screen.dart';
-import 'package:puzzle/screens/home/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:puzzle/features/auth/logic/auth_cubit.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
-import 'screens/auth/login_screen.dart';
+import 'core/di/di.dart';
+import 'features/auth/logic/auth_state.dart';
+import 'features/auth/ui/views/login_screen.dart';
+import 'features/questions/ui/views/questionnaire_view.dart';
+import 'features/selection/ui/views/selection_screen.dart';
+import 'screens/home/home_screen.dart';
 
-late bool isLogin;
-late SharedPreferences sharedPreferences;
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  sharedPreferences = await SharedPreferences.getInstance();
   await Firebase.initializeApp();
-  isLogin = FirebaseAuth.instance.currentUser != null ? true : false;
-  runApp(const MyApp());
+  await setupDependencyInjection();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+    runApp(MyApp(navigatorKey: navigatorKey));
+  });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.navigatorKey});
+  final GlobalKey<NavigatorState> navigatorKey;
 
   @override
   Widget build(BuildContext context) {
-    // var id = sharedPreferences.getString("id") ?? "";
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.appTheme,
-      // home: const SelectionScreen(),
-      home: isLogin
-              ? const CallPickupScreen(scaffold: HomeScreen())
-          : const LoginScreen(),
+    return BlocProvider(
+      create: (context) => AuthCubit(
+        authRepository: getIt(),
+        storageRepository: getIt(),
+        userRepository: getIt(),
+      )..checkAuthStatus(),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.appTheme,
+        navigatorObservers: [routeObserver],
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthenticatedState) {
+              if (state.userModel.questionnaireAnswersModel.isCompleted) {
+                final defaultSelections = {
+                  "0": 0,
+                  "1": 0,
+                  "2": 0,
+                };
+
+                if (mapEquals(state.userModel.selection, defaultSelections)) {
+                  return SelectionScreen();
+                } else {
+                  return HomeScreen();
+                }
+              } else {
+                return QuestionnaireView();
+              }
+            } else {
+              return LoginScreen();
+            }
+          },
+        ),
+      ),
     );
   }
 }
